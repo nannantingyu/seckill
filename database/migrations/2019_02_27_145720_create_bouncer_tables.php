@@ -22,7 +22,7 @@ class CreateBouncerTables extends Migration
             $table->integer('entity_id')->unsigned()->nullable();
             $table->string('entity_type')->nullable();
             $table->boolean('only_owned')->default(false);
-            $table->json('options')->nullable();
+            $table->text('options')->nullable();
             $table->integer('scope')->nullable()->index();
             $table->timestamps();
         });

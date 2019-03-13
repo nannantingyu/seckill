@@ -25,7 +25,7 @@ class CreateSeckill extends Migration
             $table->dateTime('check_at')->nullable(true);
             $table->dateTime('begin_time')->nullable(false);
             $table->dateTime('end_time')->nullable(false);
-            $table->tinyInteger('state')->nullable(false)->default(0)->before('check_at');
+            $table->tinyInteger('state')->nullable(false)->default(0);
             $table->smallInteger('quantity')->nullable(false)->default(0);
             $table->smallInteger('stock')->nullable(false)->default(0);
             $table->timestamp('created_at')->nullable(false)->default(\Illuminate\Support\Facades\DB::raw("CURRENT_TIMESTAMP"));

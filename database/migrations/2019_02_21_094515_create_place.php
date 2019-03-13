@@ -18,7 +18,7 @@ class CreatePlace extends Migration
             $table->string('name', 64)->nullable(false);
             $table->integer('parent_id')->nullable(false)->default(0);
             $table->string('code', 16)->nullable(false);
-            $table->tinyInteger('type')->default(0)->after('code');
+            $table->tinyInteger('type')->default(0);
             $table->timestamp('created_at')->nullable(false)->default(\Illuminate\Support\Facades\DB::raw("CURRENT_TIMESTAMP"));
             $table->timestamp('updated_at')->nullable(false)->default(\Illuminate\Support\Facades\DB::raw("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"));
         });

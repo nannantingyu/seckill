@@ -10,8 +10,8 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
-    <script src="{{ asset('js/common.js') }}"></script>
+    <script src="{{ asset('plugin/jquery.js') }}"></script>
+    <script src="{{ mix('js/common.js') }}"></script>
     <script src="{{ mix('js/page.js') }}"></script>
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">

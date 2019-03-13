@@ -12,6 +12,7 @@
     <!-- Scripts -->
     <script src="{{ asset('plugin/jquery.js') }}"></script>
     <script src="{{ mix('js/page.js') }}"></script>
+    <script src="{{ asset('js/common.js') }}?id=534213342424"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -97,6 +98,5 @@
             $(".unlogined").show();
         }
     </script>
-    <script src="{{ asset('js/common.js') }}?id=534213342424"></script>
 </body>
 </html>

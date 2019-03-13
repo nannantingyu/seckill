@@ -31,7 +31,10 @@ class SeckillOrderRepository
     }
 
     public function findOrder($order_no) {
-        return SeckillOrder::where('order_no', $order_no)->first();
+        return SeckillOrder::where('order_no', $order_no)
+            ->join('seckill', 'seckill_order.goods_id', '=', 'seckill.id')
+            ->select('seckill_order.*', 'seckill.title')
+            ->first();
     }
 
     public function paySuccess($order_no, $pay_time, $pay_type, $pay_order_no) {
@@ -55,5 +58,13 @@ class SeckillOrderRepository
 
     public function weixinpaySuccess($order_no, $pay_time, $pay_order_no) {
         return $this->paySuccess($order_no, $pay_time, 2, $pay_order_no);
+    }
+
+    public function listOrders() {
+        return SeckillOrder::where('user_id', Auth::id())
+            ->join('seckill', 'seckill_order.goods_id', '=', 'seckill.id')
+            ->select('seckill_order.*', 'seckill.title')
+            ->orderBy('updated_at', 'desc')
+            ->get();
     }
 }

@@ -7,7 +7,7 @@
                 <div class="card-header">{{ __('订单填写') }}</div>
 
                 <div class="card-body">
-                    <form name="order_form" method="POST">
+                    <form name="order_form" method="POST" action="/fill_order">
                         @csrf
                         <p>商品名称：{{ $order['title'] }}</p>
                         <p>订单金额：¥{{ $order['order_price'] }}</p>
@@ -56,8 +56,8 @@
 
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
-                                <button class="btn btn-primary" type="button" onclick="submit_order()" >
-                                    {{ __('支付') }}
+                                <button class="btn btn-primary" >
+                                    {{ __('提交收获信息') }}
                                 </button>
                             </div>
                         </div>
@@ -66,36 +66,4 @@
             </div>
         </div>
     </div>
-@endsection
-@section("script")
-    <script>
-        function submit_order() {
-            $.ajax({
-                url: "/fill_order",
-                type: "post",
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: {
-                    order_no: document.order_form.order_no.value,
-                    address: document.order_form.address.value,
-                    phone: document.order_form.phone.value,
-                    username: document.order_form.username.value
-                },
-                success: function(result) {
-                    window.location.href = "/order_alipay?order_no=" + document.order_form.order_no.value;
-                },
-                error: function(err1) {
-                    let err_msg = [];
-                    if (err1.status === 422) {
-                        Array.from(Object.values(err1.responseJSON.errors)).forEach(x=>{
-                            err_msg.push(x.join("\n"));
-                        });
-
-                        alert(err_msg.join("\n"));
-                    }
-                }
-            });
-        }
-    </script>
 @endsection

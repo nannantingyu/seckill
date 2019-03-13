@@ -48,6 +48,12 @@ Route::middleware('auth')->group(function() {
     Route::post('fill_order', "Shopper\OrderController@orderFill");
     Route::get('seckill_url', "Shopper\SeckillController@getSeckillUrl");
     Route::get('order_alipay', "Shopper\OrderController@orderAliPay");
+    Route::post('check_pay_status', "Shopper\OrderController@checkPayStatus");
+    Route::get('pay_success', "Shopper\OrderController@paySuccessPage");
+    Route::get('order_list', "Shopper\OrderController@orderList");
+    Route::get('orderinfo', "Shopper\OrderController@orderinfoPage")->name('orderinfo');
+    Route::get('cancel_order', "Shopper\OrderController@cancelOrder")->name('cancel_order');
+    Route::get('del_order', "Shopper\OrderController@delOrder")->name('del_order');
 });
 Route::post('order_alipay_notify', "Shopper\OrderController@alipayNotify");
 

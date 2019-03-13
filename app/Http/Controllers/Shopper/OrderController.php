@@ -9,6 +9,7 @@ use App\Repository\SeckillOrderRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Omnipay\Omnipay;
+use Illuminate\Http\Response;
 
 class OrderController extends Controller
 {
@@ -68,10 +69,8 @@ class OrderController extends Controller
         ]);
 
         if ($this->seckillOrderRepository->fillOrder($request->only(["phone", "address", "username", "order_no"]))) {
-            return response('', 200);
+            return redirect('/orderinfo?order_no='.$request->input('order_no'));
         }
-
-        return response('下单失败', 500);
     }
 
     public function orderAliPay(Request $request) {
@@ -85,8 +84,8 @@ class OrderController extends Controller
         $gateway->setAppId('2016092800614064');
         $gateway->setPrivateKey(config('site.alipay_private_key'));
         $gateway->setAlipayPublicKey(config('site.alipay_public_key'));
-        $gateway->setNotifyUrl("http://yj.cn/order_alipay_notify");
-        $gateway->setReturnUrl('http://yj.cn/alipay_callback');
+        $gateway->setNotifyUrl(config('site.alipay_notify_url'));
+        $gateway->setReturnUrl(config('site.alipay_return_url'));
         $gateway->sandbox();
 
         $seckill = $this->seckillRepository->find($order->goods_id);
@@ -108,18 +107,50 @@ class OrderController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function alipaySuccess(Request $request) {
-        $order_no= $request->input('out_trade_no');
-        $pay_time = $request->input('timestamp');
-        $pay_order_no = $request->input('trade_no');
-        if ($this->seckillOrderRepository->alipaySuccess($order_no, $pay_time, $pay_order_no)) {
-            return view('shopper.seckill_pay_success');
-        }
-
+    public function alipayCallback(Request $request) {
         return view('shopper.seckill_pay_failed');
     }
 
     public function alipayNotify(Request $request) {
-        Storage::put("notify.json", json_encode($request->all()));
+        $gateway = Omnipay::create('Alipay_AopPage');
+        $gateway->setSignType('RSA2');
+        $gateway->setAppId('2016092800614064');
+        $gateway->setPrivateKey(config('site.alipay_private_key'));
+        $gateway->setAlipayPublicKey(config('site.alipay_public_key'));
+
+        $res = $gateway->completePurchase();
+        $res->setParams($_POST);
+
+        try {
+            $response = $res->send();
+            if ($response->isPaid()) {
+                $order_no= $request->input('out_trade_no');
+                $pay_time = $request->input('notify_time');
+                $pay_order_no = $request->input('trade_no');
+                if ($this->seckillOrderRepository->alipaySuccess($order_no, $pay_time, $pay_order_no)) {
+                    return new Response('failure');
+                }
+
+                return new Response('success');
+            }
+        }
+        catch (Exception $e) {
+            return new Response('failure');
+        }
+    }
+
+    public function orderList(Request $request) {
+        $orders = $this->seckillOrderRepository->listOrders();
+        return view('shopper.seckill_order_list', ['orders'=>$orders]);
+    }
+
+    public function orderinfoPage(Request $request) {
+        $order_no = $request->input('order_no');
+        if ($order_no) {
+            $order = $this->seckillOrderRepository->findOrder($order_no);
+            if (! is_null($order)) {
+                return view('shopper.seckill_order_info', ['order'=>$order]);
+            }
+        }
     }
 }

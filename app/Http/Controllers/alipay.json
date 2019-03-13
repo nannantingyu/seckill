@@ -1,0 +1,14 @@
+{
+    "charset": "UTF-8",
+    "out_trade_no": "201903131006243175",
+    "method": "alipay.trade.page.pay.return",
+    "total_amount": "9999.00",
+    "sign": "wpnw9PS6aL1%2ByNXtT%2FkXmhh%2F68XJyo4qTApTFsi3vLMgyQsYw2xH9FBchzLjdjjytOqQxuUr5612f7M5VsmWAFSS8kZ1e6WwaRjc1N39rDE3mkJO6PoEmh3XeUwtSUCZXNoNB0cGOpx%2Bmt9t2KvBu7XZxVxhNIPHMi9l8AkrK4VnniwL72h0hpIHLhWDU4J17xa7HkBKI6k%2B5msGBFQDbluUBzfq296FzdA6nPTmQt%2B5G38YBtdPwXOMcQxFK%2FRb8DUYoDrgz%2BxUa9GE9yiY%2Fw1WzjRPF9GxzlzerDKQNFqEgrqPsJe3K2l5p54X2QDFh%2BRbUuAehx6KytCqZriAYA%3D%3D",
+    "trade_no": "2019031322001432860500905722",
+    "auth_app_id": "2016092800614064",
+    "version": 1.0,
+    "app_id": "2016092800614064",
+    "sign_type": "RSA2",
+    "seller_id": "2088102177617291",
+    "timestamp": "2019-03-13 10:07:06"
+}

@@ -1,0 +1,72 @@
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+.breadcrumb>li+li:before {
+  padding: 0 5px;
+  color: #ccc;
+  content: "/\00a0";
+}
+
+.pic-wall {
+  position: relative;
+}
+.pic-wall img{
+  width: 200px;
+}
+.pic-wall .close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+}
+#detail_pictures {
+  position: relative;
+}
+#detail_pictures .remove {
+  cursor: pointer;
+  position: absolute;
+  right: -5px;
+  top: 20px;
+}
+
+#addPic {
+  margin: 20px auto;
+}
+.error_msg {
+  text-align: center;
+  color: #F00;
+}
+
+.checkpass, .checkpass a{
+  color: #000;
+}
+
+.checknotpass, .checknotpass a{
+  color: #f00;
+}
+
+.notcheck, .notcheck a{
+  color: #0f0;
+}
+
+li {
+  list-style-type: none;
+}
+
+ul.goods-list li{
+  float: left;
+  display: block;
+  width: 200px;
+  height: 450px;
+  overflow: hidden;
+}
+ul.goods-list li img{
+  width: 200px;
+  height: 200px;
+}
+ul.goods-list li p {
+  margin-bottom: 0;
+  line-height: 25px;
+}
+ul.goods-list li p a {
+  text-align: center;
+}

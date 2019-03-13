@@ -117,12 +117,14 @@ class OrderController extends Controller
         $gateway->setAppId('2016092800614064');
         $gateway->setPrivateKey(config('site.alipay_private_key'));
         $gateway->setAlipayPublicKey(config('site.alipay_public_key'));
+        $gateway->sandbox();
 
         $res = $gateway->completePurchase();
         $res->setParams($_POST);
 
         try {
             $response = $res->send();
+            Storage::put('notify.txt', json_encode($response->getData()));
             if ($response->isPaid()) {
                 $order_no= $request->input('out_trade_no');
                 $pay_time = $request->input('notify_time');

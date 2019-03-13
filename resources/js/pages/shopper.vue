@@ -14,7 +14,7 @@
                 <el-table-column prop="nick_name" label="商家名" width="100"></el-table-column>
                 <el-table-column prop="avatar" width="120" label="头像">
                     <template slot-scope="scope">
-                        <img :src="/scope.row.avatar" :alt="scope.row.nick_name" style="width: 100px; height: 100px;">
+                        <img :src="'/'+scope.row.avatar" :alt="scope.row.nick_name" style="width: 100px; height: 100px;">
                     </template>
                 </el-table-column>
                 <el-table-column prop="account_name" label="用户名" width="100"></el-table-column>
@@ -127,7 +127,3 @@
         }
     }
 </script>
-
-<style scoped>
-
-</style>

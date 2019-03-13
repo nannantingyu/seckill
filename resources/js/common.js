@@ -1,4 +1,4 @@
-function fixLocaltime() {
+window.fixLocaltime = function() {
     const dtd = $.Deferred();
     $.get('/timediff?localtime=' + (new Date()).getTime(), function(result) {
         cookie_tool.setCookie('timediff', result.timediff);
@@ -6,9 +6,9 @@ function fixLocaltime() {
     });
 
     return dtd;
-}
+};
 
-function count_dead_time(begin_time, end_time) {
+window.count_dead_time = function(begin_time, end_time) {
     const begin = (new Date(begin_time.replace("-", "/"))).getTime(),
         end = (new Date(end_time.replace("-", "/"))).getTime(),
         now = (new Date()).getTime() + (parseInt(cookie_tool.getCookie('timediff')) || 0);
@@ -22,9 +22,9 @@ function count_dead_time(begin_time, end_time) {
     }
 
     return time;
-}
+};
 
-function seconds_format(second) {
+window.seconds_format = function(second) {
     if(second <= 60) {
         return Math.floor(second) + "秒";
     }
@@ -36,4 +36,4 @@ function seconds_format(second) {
         const hours = Math.floor(second / 3600);
         return hours + "时" + seconds_format(second - hours * 3600);
     }
-}
+};

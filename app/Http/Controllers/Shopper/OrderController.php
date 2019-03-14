@@ -80,9 +80,9 @@ class OrderController extends Controller
 
         $order = $this->seckillOrderRepository->findOrder($request->input('order_no'));
         $gateway = Omnipay::create('Alipay_AopPage');
-        $gateway->setSignType('RSA2');
-        $gateway->setAppId('2016092800614064');
-        $gateway->setPrivateKey(config('site.alipay_private_key'));
+        $gateway->setSignType(config('site.alipay_sign_type'));
+        $gateway->setAppId(config('site.alipay_app_id'));
+        $gateway->setPrivateKey(config('site.alipay_app_private_key'));
         $gateway->setAlipayPublicKey(config('site.alipay_public_key'));
         $gateway->setNotifyUrl(config('site.alipay_notify_url'));
         $gateway->setReturnUrl(config('site.alipay_return_url'));
@@ -113,14 +113,14 @@ class OrderController extends Controller
 
     public function alipayNotify(Request $request) {
         $gateway = Omnipay::create('Alipay_AopPage');
-        $gateway->setSignType('RSA2');
-        $gateway->setAppId('2016092800614064');
-        $gateway->setPrivateKey(config('site.alipay_private_key'));
+        $gateway->setSignType(config('site.alipay_sign_type'));
+        $gateway->setAppId(config('site.alipay_app_id'));
+        $gateway->setPrivateKey(config('site.alipay_app_private_key'));
         $gateway->setAlipayPublicKey(config('site.alipay_public_key'));
         $gateway->sandbox();
 
         $res = $gateway->completePurchase();
-        $res->setParams($_POST);
+        $res->setParams($request->except(['_token']));
 
         try {
             $response = $res->send();
@@ -142,8 +142,43 @@ class OrderController extends Controller
     }
 
     public function orderList(Request $request) {
-        $orders = $this->seckillOrderRepository->listOrders();
-        return view('shopper.seckill_order_list', ['orders'=>$orders]);
+        $data = json_decode('{
+    "gmt_create": "2019-03-14 11:02:01",
+    "charset": "UTF-8",
+    "gmt_payment": "2019-03-14 11:02:08",
+    "notify_time": "2019-03-14 11:02:09",
+    "subject": "\u6d77\u8d3c\u5546\u57ce\u652f\u4ed8",
+    "sign": "GLVQGMfv9LGdh9MiM6cle38z5XWSfWg6t138KF67KATyh3ArXqdwVARUAVfuJV\/yAxGVyZ\/yaBICVJK+6v\/\/DiOVbuqStHmoyyrHoVU0GGu+RTV0bYP8G9RC36uzcCljyrT7IAfMMz3b+hpxaPMVeWj98hCdsZNu6eH77K6Lgqw2DCotAdys7lo3urRPZewMo\/+6uWETDtbbRV7NlxenELbhfgvaDeIweSb6h+EuZNpG30acgNg1xJ2NV\/Tg0WwKp3RAjj32cQilOjbe6dN1av7NAaecjWZLnhdFiG+glpy23DkHmh1o2enZyj1Ss68qhYx9coFZHOubCAd7UTtBPw==",
+    "buyer_id": "2088102177632869",
+    "body": "\u84dd\u6ce2\u7403\u4f4e\u4ef7\u51fa\u552e\u5566",
+    "invoice_amount": "1.00",
+    "version": "1.0",
+    "notify_id": "5fbf037cd0a4b164820ff9a337059ebmn1",
+    "fund_bill_list": "[{\"amount\":\"1.00\",\"fundChannel\":\"ALIPAYACCOUNT\"}]",
+    "notify_type": "trade_status_sync",
+    "out_trade_no": "7b5adf78-4605-11e9-a402-00163e0e4978",
+    "total_amount": "1.00",
+    "trade_status": "TRADE_SUCCESS",
+    "trade_no": "2019031422001432860500906052",
+    "auth_app_id": "2016092800614064",
+    "receipt_amount": "1.00",
+    "point_amount": "0.00",
+    "app_id": "2016092800614064",
+    "buyer_pay_amount": "1.00",
+    "sign_type": "RSA2",
+    "seller_id": "2088102177617291",
+    "_url": "\/order_alipay_notify"
+}');
+
+        $html = '<form action="order_alipay_notify" method="post">';
+        foreach ($data as $key=>$val) {
+            $html .= '<input type="text" name="'.$key.'" value="'.$val.'">';
+        }
+
+        $html .= '<button>提交</button></form>';
+        Storage::put('test.blade.php', $html);
+//        $orders = $this->seckillOrderRepository->listOrders();
+//        return view('shopper.seckill_order_list', ['orders'=>$orders]);
     }
 
     public function orderinfoPage(Request $request) {

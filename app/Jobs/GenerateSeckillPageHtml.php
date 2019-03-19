@@ -7,15 +7,15 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\Models\Seckill;
+use App\Models\FlashSale;
 use Storage;
-use App\Repository\SeckillRepository;
-use App\Repository\SeckillGoodsRepository;
+use App\Repository\FlashSaleRepository;
+use App\Repository\FlashSaleGoodsRepository;
 
-class GenerateSeckillPageHtml implements ShouldQueue
+class GenerateFlashSalePageHtml implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    private $seckill;
+    private $FlashSale;
     public $tries = 5;
 
     /**
@@ -23,9 +23,9 @@ class GenerateSeckillPageHtml implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Seckill $seckill)
+    public function __construct(FlashSale $FlashSale)
     {
-        $this->seckill = $seckill;
+        $this->FlashSale = $FlashSale;
     }
 
     /**
@@ -36,14 +36,14 @@ class GenerateSeckillPageHtml implements ShouldQueue
     public function handle()
     {
         // 更新列表页
-        $new_goods = app()->make(SeckillRepository::class)->listSeckill();
+        $new_goods = app()->make(FlashSaleRepository::class)->listFlashSale();
 
-        $seckill_index_view = view('shopper.goods_kill_home', ['new_goods'=>$new_goods]);
-        Storage::put(get_html_cache_path('kill_home', 'seckill'), $seckill_index_view);
+        $FlashSale_index_view = view('shopper.goods_kill_home', ['new_goods'=>$new_goods]);
+        Storage::put(get_html_cache_path('kill_home', 'FlashSale'), $FlashSale_index_view);
 
         // 更新详情页
-        $goods_detail = app()->make(SeckillGoodsRepository::class)->findById($this->seckill->goods_id);
-        $detail_view = view('shopper.goods_kill', ['seckill'=>$this->seckill, 'goods'=>$goods_detail]);
-        Storage::put(get_html_cache_path($this->seckill->id, 'seckill'), $detail_view);
+        $goods_detail = app()->make(FlashSaleGoodsRepository::class)->findById($this->FlashSale->goods_id);
+        $detail_view = view('shopper.goods_kill', ['FlashSale'=>$this->FlashSale, 'goods'=>$goods_detail]);
+        Storage::put(get_html_cache_path($this->FlashSale->id, 'FlashSale'), $detail_view);
     }
 }

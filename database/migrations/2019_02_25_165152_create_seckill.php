@@ -21,7 +21,7 @@ class CreateSeckill extends Migration
             $table->string('description', 256);
             $table->decimal('ori_price', 10, 2)->nullable(false);
             $table->decimal('kill_price', 10, 2)->nullable(false);
-            $table->integer('shopper_id')->nullable(false);
+            $table->integer('merchant_id')->nullable(false);
             $table->dateTime('check_at')->nullable(true);
             $table->dateTime('begin_time')->nullable(false);
             $table->dateTime('end_time')->nullable(false);

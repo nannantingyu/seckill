@@ -18,7 +18,7 @@ class CreateSeckillOrder extends Migration
             $table->integer('goods_id')->nullable(false);
             $table->decimal('order_price')->nullable(false);
             $table->integer('user_id')->nullable(false);
-            $table->integer('shopper_id')->nullable(false);
+            $table->integer('merchant_id')->nullable(false);
             $table->dateTime('pay_time')->nullable(true);
             $table->tinyInteger('pay_status')->nullable(false)->default(0);
             $table->string('address', 512)->nullable(true);

@@ -7,11 +7,11 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\Repository\SeckillRepository;
+use App\Repository\Dao\FlashSaleRepository;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redis;
 
-class GenerateSeckillUrl implements ShouldQueue
+class GenerateFlashSaleUrl implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $tries = 5;
@@ -31,11 +31,12 @@ class GenerateSeckillUrl implements ShouldQueue
      */
     public function handle()
     {
-        $seckill_goods = app()->make(SeckillRepository::class)->getAlmostBeginSeckills();
-        foreach ($seckill_goods as $goods) {
-            Redis::executeRaw(['set', 'seckill_url:'.$goods->id, uuid(), 'ex', strtotime($goods->end_time) - time(), 'nx']);
+        $FlashSale_goods = app()->make(FlashSaleRepository::class)->getAlmostBeginFlashSales();
+        foreach ($FlashSale_goods as $goods) {
+            Redis::executeRaw(['set', 'flash_sale_url_key:'.$goods->id, uuid(), 'ex', strtotime($goods->end_time) - time(), 'nx']);
         }
 
-        echo "Success to generate seckill url".PHP_EOL;
+        // 记录日志
+        echo "生成秒杀商品成功".PHP_EOL;
     }
 }

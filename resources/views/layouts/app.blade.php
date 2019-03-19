@@ -62,8 +62,8 @@
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('login') }}">用户登陆</a>
-                                    <a class="dropdown-item" href="/shopper_login">商家登陆</a>
-                                    <a class="dropdown-item" href="/ad/login">管理员登陆</a>
+                                    <a class="dropdown-item" href="/merchant/login">商家登陆</a>
+                                    <a class="dropdown-item" href="/admin/login">管理员登陆</a>
                                 </div>
                             </li>
                             @if (Route::has('register'))

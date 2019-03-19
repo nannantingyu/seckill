@@ -16,7 +16,7 @@ class CreateSeckillGoods extends Migration
         Schema::create('seckill_goods', function (Blueprint $table) {
             $table->increments('id');
             $table->string('goods_id', 36)->nullable(false);
-            $table->integer('shopper_id')->nullable(false);
+            $table->integer('merchant_id')->nullable(false);
             $table->string('goods_name', 256)->nullable(false);
             $table->string('place', 256);
             $table->string('brand', 128);

@@ -4,10 +4,6 @@ function uuid() {
     return Uuid::uuid1()->toString();
 }
 
-function internal_error_json_response() {
-    return response()->json(["errors"=>["sever error"=>["internal server error"]]], 500);;
-}
-
 function dp($obj) {
     var_dump($obj);
 }
@@ -84,4 +80,8 @@ function get_html_cache_path($name, $path='default') {
 function img_save_path($path) {
     $img_host = env("IMG_HOST");
     return $img_host."/".ltrim($path, '/');
+}
+
+function locale_message($message) {
+    return trans($message);
 }

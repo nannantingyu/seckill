@@ -53,7 +53,7 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $this->validator($request->all())->validate();
-        $avatar = $request->file('avatar')->store('avatar/'.date('Ymd'));
+        $avatar = $request->file('avatar')->store('uploads/avatar/'.date('Ymd'));
 
         $data = array_merge($request->all(), compact('avatar'));
         event(new Registered($user = $this->create($data)));

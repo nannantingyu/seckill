@@ -2,25 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\UserRegisted;
 use Illuminate\Http\Request;
-use Auth;
-use App\Repository\SeckillRepository;
-use Cookie;
-use Illuminate\Support\Facades\Redis;
-use Illuminate\Support\Facades\Hash;
-use PhpAmqpLib\Connection\AMQPStreamConnection;
-use Omnipay\Omnipay;
 use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
 {
-    private $seckillRepository;
-    public function __construct(SeckillRepository $seckillRepository)
-    {
-        $this->seckillRepository = $seckillRepository;
-    }
-
     /**
      * Show the application dashboard.
      *
@@ -31,9 +17,6 @@ class HomeController extends Controller
         return view('home');
     }
 
-    public function mail() {
-        event(new UserRegisted(Auth::user()));
-    }
 
     public function test() {
 //        $connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
@@ -47,8 +30,7 @@ class HomeController extends Controller
 //            dump($body);
 //        });
 
-
-
+        return view('test');
     }
 
     public function test2(Request $request) {

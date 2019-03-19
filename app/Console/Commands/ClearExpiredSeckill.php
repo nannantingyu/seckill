@@ -3,17 +3,17 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Repository\SeckillRepository;
+use App\Repository\FlashSaleRepository;
 use Illuminate\Support\Facades\Storage;
 
-class ClearExpiredSeckill extends Command
+class ClearExpiredFlashSale extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'seckill:clear';
+    protected $signature = 'FlashSale:clear';
 
     /**
      * The console command description.
@@ -40,23 +40,23 @@ class ClearExpiredSeckill extends Command
     public function handle()
     {
         // update detail page
-        $new_goods = app()->make(SeckillRepository::class)->listSeckill();
+        $new_goods = app()->make(FlashSaleRepository::class)->listFlashSale();
 
-        $all_seckill_files = Storage::files('html/seckill');
+        $all_FlashSale_files = Storage::files('html/FlashSale');
         $new_files = [];
 
         array_map(function($goods) use($new_files) {
             array_push($new_files, get_html_cache_path($goods->id));
         }, $new_goods->toArray());
 
-        $expired_caches = array_diff($all_seckill_files, $new_files);
+        $expired_caches = array_diff($all_FlashSale_files, $new_files);
         foreach ($expired_caches as $file) {
             Storage::delete($file);
         }
 
         // update list page
-        $seckill_index_view = view('shopper.goods_kill_home', ['new_goods'=>$new_goods]);
-        Storage::put(get_html_cache_path('kill_home', 'seckill'), $seckill_index_view);
+        $FlashSale_index_view = view('shopper.goods_kill_home', ['new_goods'=>$new_goods]);
+        Storage::put(get_html_cache_path('kill_home', 'FlashSale'), $FlashSale_index_view);
 
         echo "Clear successfully".PHP_EOL;
     }

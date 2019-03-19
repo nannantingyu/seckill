@@ -24,18 +24,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(\App\Repository\CategoryRepository::class, function() {
-            return new \App\Repository\CategoryRepository();
-        });
-        $this->app->singleton(\App\Repository\SeckillRepository::class, function() {
-            return new \App\Repository\SeckillRepository();
-        });
-        $this->app->singleton(\App\Repository\SeckillGoodsRepository::class, function() {
-            return new \App\Repository\SeckillGoodsRepository();
+        $this->app->singleton(\App\Repository\Dao\FlashSaleRepository::class, function() {
+            return new \App\Repository\Cache\FlashSaleCacheRepository();
         });
 
-        $this->app->singleton("shopper_auth", function() {
-            return new \App\Repository\ShopperLoginRepository();
+        $this->app->singleton(\App\Repository\Dao\FlashSaleGoodsRepository::class, function() {
+            return new \App\Repository\Cache\FlashSaleGoodsCacheRepository();
         });
+
+        $this->app->singleton("merchant_auth", \App\Services\MerchantAuth::class);
     }
 }

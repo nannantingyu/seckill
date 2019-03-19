@@ -17,6 +17,7 @@
         "laravel/tinker": "^1.0",
         "league/omnipay": "^3",
         "lokielse/omnipay-alipay": "^3.0",
+        "nesbot/carbon": "^2.16",
         "omnipay/paypal": "^3.0",
         "php-amqplib/php-amqplib": "^2.8",
         "predis/predis": "^1.1",

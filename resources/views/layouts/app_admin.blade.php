@@ -6,7 +6,7 @@
         <!-- Styles -->
         <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
         @yield('script-head')
-        <script src="{{ asset('js/ad.js') }}"></script>
+        <script src="{{ asset('js/admin.js') }}"></script>
     </head>
     <body>
     <nav class="navbar navbar-expand-md navbar-light navbar-laravel">

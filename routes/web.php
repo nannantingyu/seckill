@@ -1,97 +1,75 @@
 <?php
+use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+Route::auth();
 
-Route::get('articlePageList', 'ArticleController@getPageList')->middleware("guest");
-Route::get('categoryCrumbs', 'CategoryController@getCategoryCrumbs');
-Route::get('categorySearchKey', 'CategoryController@getSearchKey');
-Route::get('categoryTree', 'CategoryController@getCategoryTree');
-Auth::routes(['verify' => true]);
-Route::get('/', 'HomeController@index')->name('home');
-Route::get('/oauth/callback', 'Auth\OAuthController@callback');
-Route::get('/oauth/refresh_token', 'Auth\OAuthController@refresh_token');
-Route::get('/oauth/password', 'Auth\OAuthController@password');
-Route::get('/mail', 'HomeController@mail');
-Route::get('/api_client', 'ApiController@apiClient');
-Route::post('/api_client', 'ApiController@storeApiClient')->name('api_client');
-Route::get('/api_client_success', 'ApiController@apiClientSuccess')->name('api_client_success');
-Route::get('/user_clients', 'ApiController@userClients');
+Route::get('test', 'HomeController@test');
+Route::post('/merchantLogin', 'Mer\ShopperController@login');
+Route::post('/merchantRegister', 'Shopper\ShopperController@register');
+Route::delete('/merchant', 'Mall\MerchantController@store');
+Route::put('/merchant', 'Mall\MerchantController@update');
 
-Route::prefix('oauth')->middleware('auth:api')->group(function() {
-    Route::get('user_base_info', 'Oauth\UserController@getUserInfo');
-});
-
-Route::post('shopper_login', 'Shopper\ShopperController@login');
-Route::post('shopper_register', 'Shopper\ShopperController@register');
-Route::post('delete_shopper', 'Shopper\ShopperController@store');
-Route::post('update_shopper', 'Shopper\ShopperController@update');
-
-
-Route::get('shopper_register', 'Shopper\ShopperController@register_page')->name('shopper_register');
-Route::get('shopper_login', 'Shopper\ShopperController@login_page');
-Route::post('shopper_logout', 'Shopper\ShopperController@logout')->name('shopper_logout');
-Route::get('kill', 'Shopper\SeckillController@killGoods');
-Route::get('timediff', 'Shopper\CommonController@localtimeDiff');
+Route::get('/', 'HomeController@index');
+Route::get('/merchantRegister', 'Mall\MerchantController@pageRegister')->name('shopper_register');
+Route::get('/merchantLogin', 'Mall\MerchantController@login_page');
+Route::post('/merchantLogout', 'Mall\MerchantController@logout')->name('shopper_logout');
+Route::get('/goodsKill', 'Mall\FlashSaleController@pageFlashSale');
+Route::get('/timeDiff', 'Mall\CommonController@localtimeDiff');
+Route::post('orderAliPayNotify', "Mall\OrderController@alipayNotify");
+Route::get('/killHome.html', "Mall\FlashSaleController@home")->middleware('cache.response:20');
+Route::get('/flashSaleList', 'Mall\FlashSaleController@getFlashSale');
 
 Route::middleware('auth')->group(function() {
-    Route::post('seckill_buy/{id}/{skid}', "Shopper\OrderController@orderPage")->middleware('order_submit');
-    Route::get('seckill_order', "Shopper\OrderController@orderFillPage");
-    Route::post('fill_order', "Shopper\OrderController@orderFill");
-    Route::get('seckill_url', "Shopper\SeckillController@getSeckillUrl");
-    Route::get('order_alipay', "Shopper\OrderController@orderAliPay");
-    Route::post('check_pay_status', "Shopper\OrderController@checkPayStatus");
-    Route::get('pay_success', "Shopper\OrderController@paySuccessPage");
-    Route::get('order_list', "Shopper\OrderController@orderList");
-    Route::get('orderinfo', "Shopper\OrderController@orderinfoPage")->name('orderinfo');
-    Route::get('cancel_order', "Shopper\OrderController@cancelOrder")->name('cancel_order');
-    Route::get('del_order', "Shopper\OrderController@delOrder")->name('del_order');
-});
-Route::post('order_alipay_notify', "Shopper\OrderController@alipayNotify");
-
-Route::middleware('shopper_auth')->group(function() {
-    Route::get('seckill_goods_add', 'Shopper\SeckillGoodsController@seckillGoodsAddPage')->name('seckill_goods_add');
-    Route::post('seckill_goods_add', 'Shopper\SeckillGoodsController@storeSeckillGoods');
-    Route::get('seckill_goods_list', 'Shopper\SeckillGoodsController@listSeckillGoods')->name('seckill_goods_list');
-    Route::get('seckill_goods_del', 'Shopper\SeckillGoodsController@deleteSeckillGoods')->name('seckill_goods_del');
-    Route::get('seckill_goods_update', 'Shopper\SeckillGoodsController@seckillGoodsUpdatePage')->name('seckill_goods_update');
-    Route::post('seckill_goods_update', 'Shopper\SeckillGoodsController@updateSeckillGoods');
-
-    Route::get('apply_for_seckill', 'Shopper\SeckillController@seckillAddPage')->name('apply_for_seckill');
-    Route::post('seckill_add', 'Shopper\SeckillController@storeSeckill')->name('seckill_add');
-    Route::get('seckill_list', 'Shopper\SeckillController@listSeckill');
-    Route::get('seckill_del', 'Shopper\SeckillController@deleteSeckill')->name('seckill_del');
-    Route::get('seckill_update', 'Shopper\SeckillController@seckillUpdatePage')->name('seckill_update');
-    Route::get('seckill_check', 'Shopper\SeckillController@checkSeckill')->name('seckill_check');
-    Route::post('seckill_update', 'Shopper\SeckillController@updateSeckill');
+    Route::post('/flashSaleBuy/{id}/{skid}', "Mall\OrderController@orderPage")->middleware('order_submit');
+    Route::get('/orderFill', "Mall\OrderController@pageOrderFill");
+    Route::post('/orderFill', "Mall\OrderController@orderFill");
+    Route::get('/killUrl', "Mall\FlashSaleController@flashSaleUrl");
+    Route::get('/orderPay', "Mall\OrderController@orderPay");
+    Route::post('/payStatus', "Mall\OrderController@payStatus");
+    Route::get('/orderList', "Mall\OrderController@pageOrderList");
+    Route::get('/orderInfo', "Mall\OrderController@pageOrderInfo")->name('orderInfo');
+    Route::post('/orderCancel', "Mall\OrderController@cancelOrder")->name('orderCancel');
+    Route::post('/orderDelete', "Mall\OrderController@delOrder")->name('orderDelete');
 });
 
-Route::get('ad', 'Admin\HomeController@home');
-Route::get('ad/login', 'Admin\LoginController@loginPage');
-Route::post('ad/logout', 'Admin\LoginController@logout');
-Route::prefix('ad')->group(function() {
-    Route::post('/login', 'Admin\LoginController@login');
-    Route::middleware('admin_auth')->group(function() {
-        Route::get('/home', 'Admin\HomeController@home');
-        Route::get('/shopper', 'Admin\ShopperController@list');
-        Route::post('/uploads_avatar', 'Admin\UploadController@uploads_avatar');
-        Route::post('/shopper/store', 'Admin\ShopperController@add_shopper');
-        Route::post('/shopper/update', 'Admin\ShopperController@update_shopper');
-        Route::post('/shopper/delete', 'Admin\ShopperController@delete_shopper');
+Route::prefix('merchant')->group(function() {
+    Route::get('/', 'Merchant\HomeController@home');
+    Route::get('/login', 'Merchant\AuthController@pageLogin');
+    Route::post('/login', 'Merchant\AuthController@login');
 
-        Route::get('/seckill', 'Admin\SeckillController@list');
-        Route::post('/seckill/check', 'Admin\SeckillController@checkSeckill');
-        Route::post('/seckill/delete', 'Admin\SeckillController@delete_seckill');
+    Route::middleware('shopper_auth')->group(function() {
+        Route::post('/logout', 'Merchant\AuthController@logout');
+        Route::get('/flashSaleGoodsAdd', 'Mall\FlashSaleGoodsController@pageAdd')->name('flashSaleGoodsAdd');
+        Route::post('/flashSaleGoodsAdd', 'Mall\FlashSaleGoodsController@store');
+        Route::get('/flashGoodsList', 'Mall\FlashSaleGoodsController@pageList')->name('flashGoodsList');
+        Route::post('/flashSaleGoodsDel', 'Mall\FlashSaleGoodsController@delete')->name('flashSaleGoodsDel');
+        Route::get('/flashSaleGoodsUpdate', 'Mall\FlashSaleGoodsController@pageUpdate')->name('flashSaleGoodsUpdate');
+        Route::post('/flashSaleGoodsUpdate', 'Mall\FlashSaleGoodsController@update');
+
+        Route::get('/flashSaleApply', 'Mall\FlashSaleController@pageFlashSaleAdd')->name('flashSaleApply');
+        Route::get('/flashSale', 'Mall\FlashSaleController@pageFlashSale');
+        Route::get('/flashSaleDelete', 'Mall\FlashSaleController@delete')->name('flashSaleDelete');
+        Route::get('/flashSaleUpdate', 'Mall\FlashSaleController@pageFlashSaleUpdate')->name('flashSaleUpdate');
+        Route::post('/flashSaleUpdate', 'Mall\FlashSaleController@update');
     });
 });
 
-Route::get('test', 'HomeController@test');
-Route::get('alipay_callback', 'Shopper\OrderController@alipaySuccess');
+Route::prefix('admin')->group(function() {
+    Route::get('/', 'Admin\HomeController@home');
+    Route::get('/login', 'Admin\LoginController@loginPage');
+    Route::post('/logout', 'Admin\LoginController@logout');
+    Route::post('/login', 'Admin\LoginController@login');
+
+    Route::middleware('admin_auth')->group(function() {
+        Route::get('/home', 'Admin\HomeController@home');
+        Route::get('/shopper', 'Admin\ShopperController@list');
+        Route::post('/avatarUploads', 'Admin\UploadController@avatarUploads');
+        Route::post('/merchant', 'Admin\MerchantController@store');
+        Route::put('/merchant', 'Admin\MerchantController@update');
+        Route::delete('/merchant', 'Admin\MerchantController@delete');
+
+        Route::get('/flashSale', 'Admin\SeckillController@list');
+        Route::post('/flashSaleCheck', 'Admin\SeckillController@flashSaleCheck');
+        Route::post('/flashSaleDelete', 'Admin\SeckillController@flashSaleDelete');
+    });
+});

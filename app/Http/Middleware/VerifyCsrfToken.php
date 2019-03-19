@@ -20,7 +20,7 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         "logout",
-        "/seckill_buy/*",
+        "/FlashSale_buy/*",
         "order_alipay_notify"
     ];
 }

@@ -8,20 +8,12 @@
                     <div class="card-header">{{ __('管理员登陆') }}</div>
 
                     <div class="card-body">
-                        <form method="POST" action="/ad/login">
-                            @csrf
-
+                        <form method="POST" onsubmit="return postLogin();">
                             <div class="form-group row">
                                 <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('用户名') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required autofocus>
-
-                                    @if ($errors->has('name'))
-                                        <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                    @endif
+                                    <input id="name" type="text" class="form-control" name="name" value="" required autofocus>
                                 </div>
                             </div>
 
@@ -29,13 +21,7 @@
                                 <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('密码') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
-
-                                    @if ($errors->has('password'))
-                                        <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                    @endif
+                                    <input id="password" type="password" class="form-control" name="password" required>
                                 </div>
                             </div>
 
@@ -52,4 +38,44 @@
             </div>
         </div>
     </div>
+@endsection
+@section('script')
+    <script>
+        function postLogin() {
+            const formValue = {
+                name: $('#name').val(),
+                password: $('#password').val(),
+            };
+
+            const error = tool.validate({
+                'name': 'required|min:3',
+                'password': 'required|min:4'
+            }, formValue, null, true);
+
+            if (error) {
+                alert(error);
+                console.error(error);
+                return false;
+            }
+
+            $.ajax({
+                url: '/admin/login',
+                type: 'post',
+                data: formValue,
+                success: result=> {
+                    if (result.code === 400000) {
+                        tool.setCookie('username', result.login_user);
+                        window.location.href = "{{ route('adminHome') }}";
+                    }
+                    else {
+                        alert(result.message);
+                    }
+                },
+                error: error=> {
+                    console.log(error);
+                }
+            });
+            return false;
+        }
+    </script>
 @endsection

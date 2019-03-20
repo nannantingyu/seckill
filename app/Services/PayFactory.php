@@ -13,10 +13,10 @@ class PayFactory {
     public static function getPay($payway) {
         if (! isset(self::$gateways[$payway])) {
             switch ($payway) {
-                case "alipay":
+                case "aliPay":
                     self::$gateways[$payway] = new Alipay();
                     break;
-                case "wxpay":
+                case "wxPay":
                     self::$gateways[$payway] = new Alipay();
                     break;
                 default:

@@ -14,6 +14,7 @@ use Illuminate\Foundation\Auth\ThrottlesLogins as ThrottleLogin;
 use Illuminate\Support\Facades\Auth;
 use JWTAuth;
 use Illuminate\Validation\ValidationException;
+use App\Tools\JsonMessage;
 
 class LoginController extends Controller
 {
@@ -44,11 +45,11 @@ class LoginController extends Controller
         if ($this->hasTooManyLoginAttempts($request)) {
             $this->fireLockoutEvent($request);
 
-            return $this->sendLockoutResponse($request);
+            $this->sendLockoutResponse($request);
         }
 
         if ($this->attemptLogin($request)) {
-            return redirect('/ad/home');
+            return $this->jsonResponse(JsonMessage::LOGIN_SUCCESS, ['login_user'=>$this->guard('admin')->user()->name]);
         }
 
         throw ValidationException::withMessages(['error'=>'Authorize failed']);

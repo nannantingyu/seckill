@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Repository\FlashSaleRepository;
+use App\Repository\Dao\FlashSaleRepository;
 use Illuminate\Support\Facades\Storage;
 
 class ClearExpiredFlashSale extends Command

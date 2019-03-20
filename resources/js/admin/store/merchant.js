@@ -5,9 +5,9 @@ const state = {
         per_page: 3,
         total: 0
     },
-    shopper_list: [],
+    merchant_list: [],
     list_back: [],
-    new_shopper: {
+    new_merchant: {
         id: null,
         account_name: '',
         avatar: '',
@@ -19,7 +19,7 @@ const state = {
         update: false,
         add: false
     },
-    shopper_rule: {
+    merchant_rule: {
         account_name: [
             { required: true, message: '请输入账户名', trigger: 'blur' },
             { min: 2, max: 32, message: '账户名长度在 2 到 32 个字符', trigger: 'blur' }
@@ -46,36 +46,36 @@ const mutations = {
     set_page(state, page) {
         Object.assign(state.page, page);
     },
-    set_shopper_list(state, shopper_list) {
-        state.shopper_list = shopper_list;
+    set_merchant_list(state, merchant_list) {
+        state.merchant_list = merchant_list;
     },
     set_back_data(state, back_data) {
         state.back_data = back_data;
     },
-    reset_shopper_list(state) {
-        state.shopper_list = tool.deepClone(state.back_data);
+    reset_merchant_list(state) {
+        state.merchant_list = tool.deepClone(state.back_data);
     },
-    delete_shopper_from_list(state, id) {
-        tool.removeListByKey(state.shopper_list, "id", id);
+    delete_merchant_from_list(state, id) {
+        tool.removeListByKey(state.merchant_list, "id", id);
         tool.removeListByKey(state.back_data, "id", id);
     },
-    update_shopper_by_index(state, {index, updates}) {
-        tool.updateListByIndex(state.shopper_list, index, updates);
-        state.back_data = tool.deepClone(state.shopper_list);
+    update_merchant_by_index(state, {index, updates}) {
+        tool.updateListByIndex(state.merchant_list, index, updates);
+        state.back_data = tool.deepClone(state.merchant_list);
     },
-    update_shopper_by_key(state, {key, key_val, updates}) {
-        tool.updateListByKey(state.shopper_list, key, key_val, updates);
+    update_merchant_by_key(state, {key, key_val, updates}) {
+        tool.updateListByKey(state.merchant_list, key, key_val, updates);
         tool.updateListByKey(state.back_data, key, key_val, updates);
     },
-    add_new_shopper(state, shopper) {
-        state.shopper_list.unshift(shopper);
-        state.back_data.unshift(shopper);
+    add_new_merchant(state, merchant) {
+        state.merchant_list.unshift(merchant);
+        state.back_data.unshift(merchant);
     },
-    set_new_shopper(state, new_shopper) {
-        state.new_shopper = Object.assign(state.new_shopper, new_shopper);
+    set_new_merchant(state, new_merchant) {
+        state.new_merchant = Object.assign(state.new_merchant, new_merchant);
     },
-    clear_new_shopper(state) {
-        state.new_shopper = {
+    clear_new_merchant(state) {
+        state.new_merchant = {
             id: null,
             account_name: '',
             avatar: '',
@@ -92,10 +92,10 @@ const mutations = {
 };
 
 const actions = {
-    get_shopper_list({commit, state, dispatch}) {
+    get_merchant_list({commit, state, dispatch}) {
         return new Promise((resolve, reject)=> {
-            axios.get('/ad/shopper').then(result=>{
-                commit('set_shopper_list', result.data.data);
+            axios.get('/admin/merchant').then(result=>{
+                commit('set_merchant_list', result.data.data);
                 commit('set_back_data', tool.deepClone(result.data.data));
                 commit('set_page', {
                     total: result.data.data.length
@@ -104,27 +104,27 @@ const actions = {
             });
         })
     },
-    update_shopper({commit, state, dispatch}) {
+    update_merchant({commit, state, dispatch}) {
         return new Promise((resolve, reject)=> {
-            axios.post('/ad/shopper/update', state.new_shopper).then(result=>{
+            axios.post('/admin/merchantUpdate', state.new_merchant).then(result=>{
                 resolve(result.data.data.merchant_id);
             }).catch(error=>{
                 reject(tool.handle_laravel_errors(error.response.data.errors));
             });
         });
     },
-    add_shopper({commit, state, dispatch}) {
+    add_merchant({commit, state, dispatch}) {
         return new Promise((resolve, reject)=> {
-            axios.post('/ad/shopper/store', state.new_shopper).then(result=>{
+            axios.post('/admin/merchant', state.new_merchant).then(result=>{
                 resolve(result.data.data.merchant_id);
             }).catch(error=>{
                 reject(tool.handle_laravel_errors(error.response.data.errors));
             });
         });
     },
-    delete_shopper({commit, state, dispatch}, id) {
+    delete_merchant({commit, state, dispatch}, id) {
         return new Promise((resolve, reject)=> {
-            axios.post('/ad/shopper/delete', {id: id}).then(()=>{
+            axios.post('/admin/merchantDelete', {id: id}).then(()=>{
                 resolve();
             }).catch(error=>{
                 reject(tool.handle_laravel_errors(error.response.data.errors));

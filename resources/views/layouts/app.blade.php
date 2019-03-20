@@ -12,7 +12,6 @@
     <!-- Scripts -->
     <script src="{{ asset('plugin/jquery.js') }}"></script>
     <script src="{{ mix('js/common.js') }}"></script>
-    <script src="{{ mix('js/page.js') }}"></script>
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
@@ -45,39 +44,33 @@
                                 <a class="dropdown-item" href="/seckill">秒杀商品</a>
                             </div>
                         </li>
-                        @if(Auth::check())
-                        <li class="nav-item"><a href="/car" class="nav-link">购物车</a></li>
-                        <li class="nav-item"><a href="/mine" class="nav-link">我的</a></li>
-                        @endif
+                        <li class="nav-item login_show"><a href="/car" class="nav-link">购物车</a></li>
+                        <li class="nav-item login_show"><a href="/mine" class="nav-link">我的</a></li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
-                        @guest
-                            <li class="nav-item dropdown">
+                            <li class="nav-item dropdown login_hide">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     登陆 <span class="caret"></span>
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('login') }}">用户登陆</a>
-                                    <a class="dropdown-item" href="/merchant/login">商家登陆</a>
-                                    <a class="dropdown-item" href="/admin/login">管理员登陆</a>
+                                    <a class="dropdown-item" href="{{ route('merchantLogin') }}">商家登陆</a>
+                                    <a class="dropdown-item" href="{{ route('adminLogin') }}">管理员登陆</a>
                                 </div>
                             </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">用户注册</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
+                            <li class="nav-item login_hide">
+                                <a class="nav-link" href="{{ route('register') }}">用户注册</a>
+                            </li>
+                            <li class="nav-item dropdown login_show">
+                                <a id="navbarDropdownLogined" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    <span id="login_user_name"></span> <span class="caret"></span>
                                 </a>
 
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownLogined">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -89,7 +82,6 @@
                                     </form>
                                 </div>
                             </li>
-                        @endguest
                     </ul>
                 </div>
             </div>
@@ -102,5 +94,20 @@
         </main>
     </div>
 @yield('script')
+    <script>
+        function loginStateSwitch() {
+            const username = tool.getCookie('username');
+            if (username) {
+                $('.login_hide').hide();
+                $('.login_show').show();
+                $('#login_user_name').text(username);
+            }
+            else {
+                $('.login_hide').show();
+                $('.login_show').hide();
+            }
+        }
+        loginStateSwitch();
+    </script>
 </body>
 </html>

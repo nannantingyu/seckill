@@ -1,15 +1,20 @@
-@extends('layouts.app_shopper')
+@extends('layouts.app')
 
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('订单填写') }}</div>
+                <div class="card-header">{{ __('收获信息') }}</div>
 
                 <div class="card-body">
-                    <form name="order_form" method="POST" action="/fill_order">
+                    <form name="order_form" method="POST" action="/orderFill">
                         @csrf
-                        <p>商品名称：{{ $order['title'] }}</p>
+                        <p>商品名称：{{ $goods['title'] }}</p>
+                        <p>
+                            @foreach(json_decode($goods->pictures) as $picture)
+                                <img height="100" src="{{ $picture }}" alt="">
+                            @endforeach
+                        </p>
                         <p>订单金额：¥{{ $order['order_price'] }}</p>
                         <input type="hidden" name="order_no" value="{{ $order['order_no'] }}">
                         <div class="form-group row">

@@ -6,7 +6,6 @@ use App\Repository\Dao\FlashSaleGoodsRepository;
 use App\Http\Requests\FlashSaleRequest;
 use Illuminate\Http\Request;
 use App\Facades\MerchantAuth;
-use App\Jobs\GenerateFlashSalePageHtml;
 use Illuminate\Support\Facades\Validator;
 use App\Tools\JsonMessage;
 
@@ -23,7 +22,8 @@ class FlashSaleController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function pageFlashSale() {
-        return view('shopper.flash_sale_list', ['goods'=>$this->flashSaleRepository->all()]);
+        $merchantId = MerchantAuth::id();
+        return view('merchant.flash_sale_list', ['goods'=>$this->flashSaleRepository->getMerchantFlashSale($merchantId)]);
     }
 
     /**
@@ -34,15 +34,15 @@ class FlashSaleController extends Controller
     public function pageFlashSaleAdd(Request $request) {
         $goods_id = $request->input('id');
         if (is_null($goods_id)) {
-            return redirect('/FlashSale_goods_list');
+            return redirect(route('merchantGoodsList'));
         }
 
-        $goods = $this->flashSaleGoodsRepository->getById($goods_id);
+        $goods = $this->flashSaleGoodsRepository->getByColumn($goods_id, 'goods_id');
         if (empty($goods)) {
-            return redirect('/FlashSale_goods_list');
+            return redirect(route('merchantGoodsList'));
         }
 
-        return view('shopper.shopper_FlashSale_add', ['goods'=>$goods]);
+        return view('merchant.flash_sale_add', ['goods'=>$goods]);
     }
 
     /**
@@ -53,12 +53,12 @@ class FlashSaleController extends Controller
     public function pageFlashSaleUpdate(Request $request) {
         $id = $request->input('id');
         if (! is_null($id)) {
-            return view('shopper.flash_sale_update', [
-                'goods'=>$this->flashSaleRepository->find($id)
+            return view('merchant.flash_sale_update', [
+                'goods'=>$this->flashSaleRepository->getById($id)
             ]);
         }
 
-        return redirect('/FlashSale_FlashSale_add');
+        return redirect(route('merchantGoodsList'));
     }
 
     /**
@@ -71,22 +71,22 @@ class FlashSaleController extends Controller
 
         $goods_id = $request->input('goods_id');
         if (is_null($goods_id)) {
-            return redirect('/FlashSale_goods_list');
+            return redirect(route('merchantGoodsList'));
         }
 
-        $goods = $this->flashSaleGoodsRepository->first($goods_id);
+        $goods = $this->flashSaleGoodsRepository->getByColumn($goods_id, 'goods_id');
         if (empty($goods)) {
-            return redirect('/FlashSale_goods_list');
+            return redirect(route('merchantGoodsList'));
         }
 
-        $detail_pictures = [];
+        $detailPictures = [];
         foreach ($request->file('pictures') as $file) {
-            array_push($detail_pictures, img_save_path($file->store('uploads/shopper/FlashSale_detail/'.date("Ymd"))));
+            array_push($detailPictures, img_save_path($file->store('uploads/merchant/flash_sale/'.date("Ymd"))));
         }
 
-        $FlashSale = $this->flashSaleRepository->create([
+        $this->flashSaleRepository->create([
             "goods_id"      =>  $goods->id,
-            "pictures"      =>  json_encode($detail_pictures),
+            "pictures"      =>  json_encode($detailPictures),
             "title"         =>  $request->input('title'),
             "description"   =>  $request->input('description'),
             "ori_price"   =>  $request->input('ori_price'),
@@ -98,8 +98,7 @@ class FlashSaleController extends Controller
             "stock"   =>  $request->input('stock'),
         ]);
 
-        GenerateFlashSalePageHtml::dispatch($FlashSale);
-        return redirect('/flash_sale_list');
+        return redirect(route('merchantGoodsList'));
     }
 
     /**
@@ -108,14 +107,14 @@ class FlashSaleController extends Controller
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response|\Illuminate\Support\MessageBag
      */
     public function update(Request $request) {
-        $old_pictures = $request->input('old_pictures');
+        $oldPictures = $request->input('old_pictures');
         if(! is_null($request->file('pictures'))) {
             foreach ($request->file('pictures') as $file) {
-                array_push($old_pictures, img_save_path($file->store('uploads/shopper/FlashSale/'.date("Ymd"))));
+                array_push($oldPictures, img_save_path($file->store('uploads/shopper/FlashSale/'.date("Ymd"))));
             }
         }
 
-        $data = array_merge($request->except(['pictures', '_token', 'old_pictures']), ['pictures'=>$old_pictures]);
+        $data = array_merge($request->except(['pictures', '_token', 'old_pictures']), ['pictures'=>json_encode($oldPictures)]);
         $validator = Validator::make($data, [
             "title"             =>  "required|between:2,128",
             "description"       =>  "required|between:2,256",
@@ -124,7 +123,7 @@ class FlashSaleController extends Controller
             "begin_time"        =>  "required|date",
             "end_time"          =>  "required|date",
             "quantity"          =>  "required|integer|min:0",
-            "stock"             =>  "required|integer|min:0"
+            "stock"             =>  "required|integer|min:0",
         ]);
 
         if ($validator->fails()) {
@@ -136,9 +135,10 @@ class FlashSaleController extends Controller
             return response(["message"=>"Params error", "code"=>10001], 401);
         }
 
-        $FlashSale = $this->flashSaleRepository->updateById($id, $data);
-        GenerateFlashSalePageHtml::dispatch($FlashSale);
-        return $this->jsonResponse(JsonMessage::UPDATE_SUCCESS);
+        $data['state'] = -2;
+        $this->flashSaleRepository->updateById($id, $data);
+//        return $this->jsonResponse(JsonMessage::UPDATE_SUCCESS);
+        return redirect(route('merchantFlashSaleList'));
     }
 
     /**

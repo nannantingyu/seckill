@@ -21,7 +21,7 @@ class AuthController extends Controller
      */
     public function pageLogin() {
         if (MerchantAuth::check()) {
-            return redirect('/merchant/flashSaleGoodsList');
+            return redirect(route('merchantGoodsList'));
         }
 
         return view('merchant.login');
@@ -38,7 +38,7 @@ class AuthController extends Controller
             return $this->jsonResponse($merchant);
         }
 
-        return $this->jsonResponse(array_merge(['login_user'=>$merchant->account_name], JsonMessage::LOGIN_SUCCESS));
+        return $this->jsonResponse(JsonMessage::LOGIN_SUCCESS, ['login_user'=>$merchant->account_name]);
     }
 
     /**

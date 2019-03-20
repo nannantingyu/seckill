@@ -13,28 +13,28 @@
                     <span slot="title">首页</span>
                 </el-menu-item>
                 <el-submenu
-                    index="/shopper">
+                    index="/merchant">
                     <template slot="title">
                         <i class="fa fa-user-o"></i>
                         <span slot="title">商家管理</span>
                     </template>
                     <el-menu-item-group>
                         <el-menu-item
-                            index="/shopper">
+                            index="/merchant">
                             <i class="fa fa-user-o"></i>
                             <span slot="title">商家列表</span>
                         </el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
                 <el-submenu
-                    index="/seckill">
+                    index="/flash_sale">
                     <template slot="title">
                         <i class="fa fa-user-o"></i>
                         <span slot="title">秒杀管理</span>
                     </template>
                     <el-menu-item-group>
                         <el-menu-item
-                            index="/seckill">
+                            index="/flash_sale">
                             <i class="fa fa-user-o"></i>
                             <span slot="title">秒杀申请列表</span>
                         </el-menu-item>

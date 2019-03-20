@@ -7,12 +7,12 @@
                 <div class="card-header">{{ __('Login') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="#" onsubmit="return postLogin() && false" id="loginForm">
+                    <form method="POST" onsubmit="return postLogin()" id="loginForm">
                         <div class="form-group row">
                             <label for="account_name" class="col-md-4 col-form-label text-md-right">{{ __('用户名') }}</label>
 
                             <div class="col-md-6">
-                                <input id="account_name" type="text" class="form-control{{ $errors->has('account_name') ? ' is-invalid' : '' }}" name="account_name" value="{{ old('account_name') }}" required autofocus>
+                                <input id="account_name" type="text" class="form-control" name="account_name" value="" required autofocus>
                             </div>
                         </div>
 
@@ -20,14 +20,14 @@
                             <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('密码') }}</label>
 
                             <div class="col-md-6">
-                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+                                <input id="password" type="password" class="form-control" name="password" required>
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <div class="col-md-6 offset-md-4">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                                    <input class="form-check-input" type="checkbox" name="remember" id="remember">
 
                                     <label class="form-check-label" for="remember">
                                         {{ __('记住我') }}
@@ -78,7 +78,13 @@
                 type: 'post',
                 data: formValue,
                 success: result=> {
-                    console.log(result);
+                    if (result.code === 400000) {
+                        tool.setCookie('merchant_name', result.login_user);
+                        window.location.href = "{{ route('merchantGoodsList') }}";
+                    }
+                    else {
+                        alert(result.message);
+                    }
                 },
                 error: error=> {
                     console.log(error);

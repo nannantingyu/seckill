@@ -31,10 +31,10 @@
                         <td>{{$order->pay_time}}</td>
                         <td>
                             @if($order->pay_status == 1)
-                            <a href="{{route('del_order',['order_no'=>$order->order_no])}}">删除订单</a>
+                            <a href="{{route('orderDelete',['order_no'=>$order->order_no])}}">删除订单</a>
                             @elseif($order->pay_status == 0)
-                            <a href="{{route('cancel_order',['order_no'=>$order->order_no])}}">取消订单</a>
-                            <a href="{{route('orderinfo',['order_no'=>$order->order_no])}}">去支付</a>
+                            <a href="{{route('orderCancel',['order_no'=>$order->order_no])}}">取消订单</a>
+                            <a href="{{route('orderInfo',['order_no'=>$order->order_no])}}">去支付</a>
                             @endif
                         </td>
                     </tr>

@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use App\Tools\JsonMessage;
 
 class LoginController extends Controller
 {
@@ -45,10 +45,8 @@ class LoginController extends Controller
         $request->session()->regenerate();
 
         $this->clearLoginAttempts($request);
-        $cookie = Cookie::forever('username', Auth::user()->name, $path = null, $domain = null, $secure = null, $httpOnly = false);
 
-        return $this->authenticated($request, $this->guard()->user())
-            ?: redirect()->intended($this->redirectPath())->withCookie($cookie);
+        return $this->jsonResponse(JsonMessage::LOGIN_SUCCESS, ['login_user'=>$this->guard()->user()->name]);
     }
 
     public function logout(Request $request)

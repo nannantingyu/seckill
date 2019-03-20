@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Repository\FlashSaleRepository;
-use App\Repository\FlashSaleGoodsRepository;
+use App\Repository\Dao\FlashSaleRepository;
+use App\Repository\Dao\FlashSaleGoodsRepository;
 use Illuminate\Support\Facades\Storage;
 
 class RegenerateFlashSale extends Command
@@ -14,7 +14,7 @@ class RegenerateFlashSale extends Command
      *
      * @var string
      */
-    protected $signature = 'FlashSale:make';
+    protected $signature = 'flashSale:make';
 
     /**
      * The console command description.
@@ -40,17 +40,12 @@ class RegenerateFlashSale extends Command
      */
     public function handle()
     {
-        // 更新列表页
-        $new_goods = app()->make(FlashSaleRepository::class)->listFlashSale();
-
-        $FlashSale_index_view = view('shopper.goods_kill_home', ['new_goods'=>$new_goods]);
-        Storage::put(get_html_cache_path('kill_home', 'FlashSale'), $FlashSale_index_view);
+        $new_goods = app()->make(FlashSaleRepository::class)->getFlashSale();
 
         // 更新详情页
         foreach ($new_goods as $goods) {
-            dump($new_goods);
-            $goods_detail = app()->make(FlashSaleGoodsRepository::class)->findById($goods->goods_id);
-            $detail_view = view('shopper.goods_kill', ['FlashSale'=>$goods, 'goods'=>$goods_detail]);
+            $goods_detail = app()->make(FlashSaleGoodsRepository::class)->getById($goods->goods_id);
+            $detail_view = view('mall.goods_kill', ['flashSale'=>$goods, 'goods'=>$goods_detail]);
             Storage::put(get_html_cache_path($goods->id, 'FlashSale'), $detail_view);
         }
 

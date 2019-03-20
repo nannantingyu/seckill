@@ -11,7 +11,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('plugin/jquery.js') }}"></script>
-    <script src="{{ asset('js/common.js') }}"></script>
+    <script src="{{ mix('js/common.js') }}"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -34,55 +34,48 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav nav-tabs">
-                        @if(ShopperAuth::check())
                         <li class="nav-item">
-                            <a class="nav-link" href="/seckill_goods_list">全部商品</a>
+                            <a class="nav-link" href="{{ route('merchantGoodsList') }}">全部商品</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/seckill_list">秒杀商品</a>
+                            <a class="nav-link" href="{{ route('merchantFlashSaleList') }}">秒杀商品</a>
                         </li>
-                        @endif
                     </ul>
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
-                        @if(! ShopperAuth::check())
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    登陆 <span class="caret"></span>
+                        <li class="nav-item dropdown login_hide">
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                登陆 <span class="caret"></span>
+                            </a>
+
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ route('login') }}">用户登陆</a>
+                                <a class="dropdown-item" href="{{ route('merchantLogin') }}">商家登陆</a>
+                                <a class="dropdown-item" href="{{ route('adminLogin') }}">管理员登陆</a>
+                            </div>
+                        </li>
+                        <li class="nav-item login_hide">
+                            <a class="nav-link" href="{{ route('merchantRegister') }}">商家注册</a>
+                        </li>
+                        <li class="nav-item dropdown login_show">
+                            <a id="navbarDropdownLogined" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                <span id="login_user_name"></span><span class="caret"></span>
+                            </a>
+
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownLogined">
+                                <a class="dropdown-item" href="#"
+                                   onclick="event.preventDefault();
+                                                 document.getElementById('logout-form').submit();">
+                                    {{ __('退出') }}
                                 </a>
 
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('login') }}">用户登陆</a>
-                                    <a class="dropdown-item" href="/shopper_login">商家登陆</a>
-                                    <a class="dropdown-item" href="/ad/login">管理员登陆</a>
-                                </div>
-                            </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('shopper_register') }}">商家注册</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ ShopperAuth::shopper()->account_name }} <span class="caret"></span>
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('退出') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('shopper_logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endif
+                                <form id="logout-form" action="{{ route('merchantLogout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -95,5 +88,20 @@
         </main>
     </div>
 @yield('script')
+    <script>
+        function loginStateSwitch() {
+            const merchant_name = tool.getCookie('merchant_name');
+            if (merchant_name) {
+                $('.login_hide').hide();
+                $('.login_show').show();
+                $('#login_user_name').text(merchant_name);
+            }
+            else {
+                $('.login_hide').show();
+                $('.login_show').hide();
+            }
+        }
+        loginStateSwitch();
+    </script>
 </body>
 </html>

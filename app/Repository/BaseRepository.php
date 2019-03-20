@@ -257,9 +257,9 @@ abstract class BaseRepository implements RepositoryContract
         return $this;
     }
 
-    public function orderBy($column, $directory)
+    public function orderBy($column, $direction)
     {
-        $this->orderBys[] = compact('column', 'directory');
+        $this->orderBys[] = compact('column', 'direction');
         return $this;
     }
 

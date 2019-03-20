@@ -10,14 +10,14 @@ export default new VueRouter ({
             component: resolve=>void(require(['./pages/index'], resolve))
         },
         {
-            name: 'shopper',
-            path: '/shopper',
-            component: resolve=>void(require(['./pages/shopper'], resolve))
+            name: 'merchant',
+            path: '/merchant',
+            component: resolve=>void(require(['./pages/merchant'], resolve))
         },
         {
-            name: 'seckill',
-            path: '/seckill',
-            component: resolve=>void(require(['./pages/seckill'], resolve))
+            name: 'flash_sale',
+            path: '/flash_sale',
+            component: resolve=>void(require(['./pages/flash_sale'], resolve))
         }
     ]
 });

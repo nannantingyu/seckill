@@ -20,10 +20,7 @@ class FlashSaleController extends Controller
      */
     public function home() {
         $view = view('mall.goods_kill_home');
-        return response($view, 200, [
-            'Cache-Control' =>  'max-age=7200',
-            'Expires' => 'Mon, 20 Jul 2019 23:00:00 GMT',
-        ]);
+        return response($view, 200);
     }
 
     /**
@@ -47,9 +44,14 @@ class FlashSaleController extends Controller
 
     /**
      * 获取即将开始或者未结束的秒杀商品
-     * @return \Illuminate\Support\Collection
+     * @return array
      */
     public function getFlashSale() {
-        return $this->flashSaleRepository->getFlashSale();
+        $flashSale = $this->flashSaleRepository->getFlashSale()->toArray();
+        foreach ($flashSale as $key=>$flash) {
+            $flashSale[$key]['url'] = "/".get_html_cache_path($flash['id'], 'FlashSale');
+        }
+
+        return $flashSale;
     }
 }

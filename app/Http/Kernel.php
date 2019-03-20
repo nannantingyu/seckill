@@ -63,7 +63,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'apitoken' => \App\Http\Middleware\ApiTokenCheck::class,
         'client' => CheckClientCredentials::class,
-        'shopper_auth' => \App\Http\Middleware\MerchantAuthenticate::class,
+        'merchant_auth' => \App\Http\Middleware\MerchantAuthenticate::class,
         'admin_auth' => \App\Http\Middleware\AdminPermissionCheck::class,
         'order_submit' => \App\Http\Middleware\FlashSaleSubmit::class,
         'cache.response' =>  \App\Http\Middleware\CacheResponse::class,

@@ -24,6 +24,15 @@ class FlashSaleRepository extends BaseRepository
     }
 
     /**
+     * 获取商家的所有秒杀商品
+     * @param $merchantId
+     * @return FlashSaleRepository[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getMerchantFlashSale($merchantId) {
+        return $this->where('merchant_id', $merchantId)->get();
+    }
+
+    /**
      * 获取已经开始秒杀且未结束或者距离秒杀还有1天的秒杀商品
      * @param string $order
      * @param int $counts
@@ -74,12 +83,16 @@ class FlashSaleRepository extends BaseRepository
 
     /**
      * 获取秒杀链接
-     * @param $FlashSaleId
+     * @param $flashSaleId
      * @return string
      */
-    public function getFlashSaleUrl($FlashSaleId) {
-        $randKey = Redis::get('flash_sale_url_key:'.$FlashSaleId);
-        return "/flashSaleBuy/".$FlashSaleId."/".$randKey;
+    public function getFlashSaleUrl($flashSaleId) {
+        $randKey = Redis::get('flash_sale_url_key:'.$flashSaleId);
+        if (is_null($randKey)) {
+            return null;
+        }
+
+        return "/flashSaleBuy/".$flashSaleId."/".$randKey;
     }
 
     /**
@@ -93,6 +106,6 @@ class FlashSaleRepository extends BaseRepository
             return false;
         }
 
-        return $urlKey == $randKey;
+        return explode('/', $urlKey)[3] == $randKey;
     }
 }

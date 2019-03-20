@@ -1,8 +1,8 @@
-@extends('layouts.app_shopper')
+@extends('layouts.app_merchant')
 @section('content')
     <ol class="breadcrumb">
-        <li><a href="/seckill_goods_list">首页</a></li>
-        <li><a href="/seckill_list">秒杀列表</a></li>
+        <li><a href="{{ route('merchantGoodsList') }}">首页</a></li>
+        <li><a href="{{ route('merchantFlashSaleList') }}">秒杀列表</a></li>
         <li class="active">秒杀修改</li>
     </ol>
     <div class="row justify-content-center">

@@ -6,7 +6,8 @@
         <!-- Styles -->
         <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
         @yield('script-head')
-        <script src="{{ asset('js/admin.js') }}"></script>
+        <script src="{{ asset('plugin/jquery.js') }}"></script>
+        <script src="{{ mix('js/common.js') }}"></script>
     </head>
     <body>
     <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
@@ -65,6 +66,6 @@
     <div class="content">
         @yield('content')
     </div>
-    @yield('script-foot')
+    @yield('script')
     </body>
 </html>

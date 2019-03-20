@@ -4,7 +4,7 @@ use App\Exceptions\GeneralException;
 use App\Http\Controllers\Controller;
 use App\Tools\JsonMessage;
 use Illuminate\Http\Request;
-use App\Repository\FlashSaleRepository;
+use App\Repository\Dao\FlashSaleRepository;
 use App\Repository\Dao\OrderRepository;
 use Illuminate\Http\Response;
 use App\Services\PayFactory;
@@ -12,11 +12,11 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    private $FlashSaleRepository;
+    private $flashSaleRepository;
     private $orderRepository;
-    public function __construct(FlashSaleRepository $FlashSaleRepository, OrderRepository $orderRepository)
+    public function __construct(FlashSaleRepository $flashSaleRepository, OrderRepository $orderRepository)
     {
-        $this->FlashSaleRepository = $FlashSaleRepository;
+        $this->flashSaleRepository = $flashSaleRepository;
         $this->orderRepository = $orderRepository;
     }
 
@@ -25,8 +25,11 @@ class OrderController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function pageOrderList() {
-        $orders = $this->orderRepository->where("user_id", Auth::id())->paginate(5);
-        return view('shopper.flashSale_order_list', ['orders'=>$orders]);
+        $orders = $this->orderRepository->where("user_id", Auth::id())
+            ->orderBy('updated_at', 'desc')
+            ->paginate(5);
+
+        return view('mall.order_list', ['orders'=>$orders]);
     }
 
     /**
@@ -35,16 +38,12 @@ class OrderController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function pageOrderFill(Request $request) {
-        $request->validate([
-            'no'    =>  'required|between:36,36'
-        ]);
-
         $order_no = $request->input('no');
-        if ($order = $this->orderRepository->getByColumn('order_no', $order_no)) {
+        if (! ($order = $this->orderRepository->getByColumn($order_no, 'order_no'))) {
             return $this->pageResponse('404');
         }
 
-        return view("shopper.flash_sale_order", ['order'=>$order]);
+        return view("mall.order", ['order'=>$order, 'goods'=>$this->flashSaleRepository->getById($order->goods_id)]);
     }
 
     /**
@@ -55,9 +54,9 @@ class OrderController extends Controller
     public function pageOrderInfo(Request $request) {
         $order_no = $request->input('order_no');
         if ($order_no) {
-            $order = $this->FlashSaleOrderRepository->findOrder($order_no);
+            $order = $this->orderRepository->getByColumn($order_no, 'order_no');
             if (! is_null($order)) {
-                return view('shopper.FlashSale_order_info', ['order'=>$order]);
+                return view('mall.order_info', ['order'=>$order]);
             }
         }
 
@@ -74,13 +73,13 @@ class OrderController extends Controller
             "phone"     =>  "required|regex:/^1[3,5,7,8,9]\d{9}$/",
             "address"   =>  "required|between:5,50",
             "username"  =>  "required|between:2,20",
-            'order_no'  =>  "required|between:36:36"
+            'order_no'  =>  "required|between:36,36"
         ]);
 
         $order_no = $request->input('order_no');
         $updates = $request->only(["phone", "address", "username", "order_no"]);
-        if ($this->orderRepository->updateByColumn('order_no', $order_no, $updates)) {
-            return redirect('/orderinfo?order_no='.$order_no);
+        if ($this->orderRepository->updateByColumn($order_no, 'order_no', $updates)) {
+            return redirect('/orderInfo?order_no='.$order_no);
         }
 
         return back();
@@ -102,7 +101,7 @@ class OrderController extends Controller
         /**
          * 1. 检查商品余量，不足的直接返回错误
          */
-        $flashSale = $this->FlashSaleRepository->find($saleId);
+        $flashSale = $this->flashSaleRepository->getById($saleId);
         $now = date("Y-m-d H:i:s");
         if (empty($flashSale) or $flashSale->stock <= 0 or $flashSale->end_time < $now) {
             return $this->jsonResponse(JsonMessage::FLASH_FINISHED_ERROR);
@@ -130,16 +129,16 @@ class OrderController extends Controller
     /**
      * 订单支付
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\View\View
      */
     public function orderPay(Request $request) {
-        $request->validate([
-            'order_no'  =>  "required|between:36:36"
-        ]);
-
         $orderNo = $request->input('order_no');
-        $orderInfo = $this->orderRepository->getByColumn('order_no', $orderNo);
-        $flashSaleGoods = $this->FlashSaleRepository->find($orderInfo->goods_id);
+        if (is_null($orderNo) or strlen($orderNo) != 36) {
+            return $this->pageResponse('404');
+        }
+
+        $orderInfo = $this->orderRepository->getByColumn($orderNo, 'order_no');
+        $flashSaleGoods = $this->flashSaleRepository->getById($orderInfo->goods_id);
         $subject = '"海贼商城支付"';
 
         $payWay = $request->input('payWay', 'aliPay');

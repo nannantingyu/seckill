@@ -24,9 +24,9 @@
                 <el-table-column width="300" label="操作">
                     <template slot-scope="scope" >
                         <div v-if="scope.row.state != 1">
-                            <el-button size="small" type="danger" @click="check_seckill(scope.row, 1)">通过</el-button>
-                            <el-button size="small" type="danger" @click="check_seckill(scope.row, -1)">不通过</el-button>
-                            <el-button size="small" type="danger" @click="delete_seckill(scope.row.id)">删除</el-button>
+                            <el-button size="small" type="danger" @click="check_flash_sale(scope.row, 1)">通过</el-button>
+                            <el-button size="small" type="danger" @click="check_flash_sale(scope.row, -1)">不通过</el-button>
+                            <el-button size="small" type="danger" @click="delete_flash_sale(scope.row.id)">删除</el-button>
                         </div>
                         <div v-else>
                             已通过验证
@@ -43,7 +43,7 @@
                 :page-sizes="[3, 5, 10, 20, 30, 40, 50, 100]"
                 class="align-center"
                 layout="sizes, total, prev, pager, next"
-                :total="seckill_list.length">
+                :total="flash_sale_list.length">
             </el-pagination>
         </el-row>
     </div>
@@ -63,52 +63,52 @@
     Vue.use(Pagination);
 
     export default {
-        name: "seckill",
+        name: "flash_sale",
         data() {return {
             search_key: ''
         }},
         computed: {
             ...mapState({
-                "seckill_list": state=>state.seckill.seckill_list,
-                "page": state=>state.seckill.page
+                "flash_sale_list": state=>state.flash_sale.flash_sale_list,
+                "page": state=>state.flash_sale.page
             }),
             table_data() {
-                return this.seckill_list.slice((this.page.page_index-1)*this.page.per_page, this.page.page_index*this.page.per_page)
+                return this.flash_sale_list.slice((this.page.page_index-1)*this.page.per_page, this.page.page_index*this.page.per_page)
             }
         },
         methods: {
             size_change(size) {
-                this.$store.commit("seckill/set_page", {
+                this.$store.commit("flash_sale/set_page", {
                     per_page: size
                 });
             },
-            add_seckill() {
-                this.$store.commit("seckill/clear_new_seckill");
-                this.$store.commit("seckill/set_visible", {key: "add", value: true});
+            add_flash_sale() {
+                this.$store.commit("flash_sale/clear_new_flash_sale");
+                this.$store.commit("flash_sale/set_visible", {key: "add", value: true});
             },
-            check_seckill(seckill, state) {
+            check_flash_sale(flash_sale, state) {
                 const _this = this;
-                this.$store.dispatch("seckill/check_seckill", {id: seckill.id, new_state: state}).then(()=>{
-                    _this.$store.commit('seckill/update_seckill_by_key', {key: "id", key_val: seckill.id, updates: {state: state}});
+                this.$store.dispatch("flash_sale/check_flash_sale", {id: flash_sale.id, new_state: state}).then(()=>{
+                    _this.$store.commit('flash_sale/update_flash_sale_by_key', {key: "id", key_val: flash_sale.id, updates: {state: state}});
                     _this.$success("更新成功！");
                 }).catch(error=>{
                     _this.$error(error);
                 })
             },
             change_sort({column, prop, order}) {
-                this.$store.commit("seckill/set_seckill_list", this.tool.sorted_table_data(this.seckill_list, prop, order));
+                this.$store.commit("flash_sale/set_flash_sale_list", this.tool.sorted_table_data(this.flash_sale_list, prop, order));
             },
             search() {
                 if (!this.search_key) {
-                    this.$store.commit("seckill/reset_seckill_list");
+                    this.$store.commit("flash_sale/reset_flash_sale_list");
                 }else {
-                    this.$store.commit("seckill/set_seckill_list", this.tool.search_table_data(this.$store.state.seckill.back_data, this.search_key));
+                    this.$store.commit("flash_sale/set_flash_sale_list", this.tool.search_table_data(this.$store.state.flash_sale.back_data, this.search_key));
                 }
             },
-            delete_seckill(id) {
+            delete_flash_sale(id) {
                 const _this = this;
-                this.$store.dispatch("seckill/delete_seckill", id).then(()=>{
-                    _this.$store.commit("seckill/delete_seckill_from_list", id);
+                this.$store.dispatch("flash_sale/delete_flash_sale", id).then(()=>{
+                    _this.$store.commit("flash_sale/delete_flash_sale_from_list", id);
                     _this.$success("删除成功！");
                 }).catch(error=>_this.$error(error));
             },
@@ -118,8 +118,8 @@
         },
         created() {
             const _this = this;
-            if (this.seckill_list.length === 0) {
-                this.$store.dispatch('seckill/get_seckill_list').then(x=>{
+            if (this.flash_sale_list.length === 0) {
+                this.$store.dispatch('flash_sale/get_flash_sale_list').then(x=>{
                     _this.$success("成功加载秒杀申请信息！");
                 });
             }

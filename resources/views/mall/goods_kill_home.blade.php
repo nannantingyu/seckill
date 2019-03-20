@@ -1,22 +1,10 @@
 @extends('layouts.app')
 @section('content')
     <div class="row justify-content-center">
-        <table class="table">
-            <tbody id="table_body"></tbody>
-        </table>
         <div class="section">
             <p class="section-title">最新秒杀</p>
-            <ul class="goods-list">
-                <li>
-                    <img src="" alt="">
-                    <p class="goods_name"><a href="/kill?id=">title</a> </p>
-                    <p class="ori_price">原价：¥ori_price</p>
-                    <p class="kill_price">秒杀价：¥kill_price</p>
-                    <p class="shopper_name">店铺：<a href="/shopper_info?id=merchant_id">nick_name</a> </p>
-                    <p class="begin_time" data-begin="begin_time" data-end="end_time"></p>
-                    <p><a href="/">立即秒杀</a></p>
-                </li>
-            </ul>
+            <table class="table">
+            </table>
         </div>
     </div>
 @endsection
@@ -24,8 +12,7 @@
     <script>
         $(function() {
             $.ajax({
-                url: '',
-                data: {},
+                url: '{{ route('flashSaleList') }}',
                 dataType: 'json',
                 success: result=> {
                     render(result);
@@ -36,10 +23,19 @@
         function render(data) {
             let table_body = "";
             data.forEach(row=> {
-                table_body += ``;
+                let pictures = JSON.parse(row.pictures);
+                table_body += `<tr>
+                <td><img width="100" src="${pictures[0]}" alt="${row.title}"></td>
+                <td>${row.title}</td>
+                <td>${row.ori_price}</td>
+                <td>${row.kill_price}</td>
+                <td><a href="/shopper_info?id=${row.merchant_id}">${row.nick_name}</a></td>
+                <td class="begin_time" data-begin="${row.begin_time}" data-end="${row.end_time}"></td>
+                <td><a href="${row.url}">购买</a></td></tr>
+                `;
             });
 
-            $('#table_body').html(table_body);
+            $('table').html(table_body);
             countDown();
         }
 
@@ -47,10 +43,10 @@
             const times = document.getElementsByClassName("begin_time");
             Array.from(times).forEach(obj=>{
                 const begin_time = obj.getAttribute('data-begin'), end_time = obj.getAttribute('data-end');
-                let time = count_dead_time(begin_time, end_time);
+                let time = tool.count_dead_time(begin_time, end_time);
                 obj.innerHTML = (time.time < 0?"距结束：" : "距开始：") + time.timeStr;
                 setInterval(()=>{
-                    let time = count_dead_time(begin_time, end_time);
+                    let time = tool.count_dead_time(begin_time, end_time);
                     obj.innerHTML = (time.time < 0?"距结束：" : "距开始：") + time.timeStr;
                 }, 1000);
             });

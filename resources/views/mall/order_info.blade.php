@@ -11,7 +11,7 @@
                 <p>收货人：{{ $order->username }}</p>
                 <p>电话：{{ $order->phone }}</p>
                 <p>收货地址：{{ $order->address }}</p>
-                <p><a href="/order_alipay?order_no={{$order->order_no}}">去支付</a></p>
+                <p><a href="/orderPay?order_no={{$order->order_no}}">去支付</a></p>
             </div>
         </div>
     </div>

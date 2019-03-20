@@ -8,7 +8,7 @@ class AdminPermissionCheck
 {
     public function handle(Request $request, Closure $next) {
         if (! Auth::guard('admin')->check()) {
-            return redirect('/ad/login');
+            return redirect('/admin/login');
         }
 
         return $next($request);

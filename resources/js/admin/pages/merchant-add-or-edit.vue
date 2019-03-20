@@ -1,17 +1,17 @@
 <template>
     <div>
-        <el-form ref="form" :model="new_shopper" label-position="right" label-width="120px" :rules="shopper_rule">
+        <el-form ref="form" :model="new_merchant" label-position="right" label-width="120px" :rules="merchant_rule">
             <el-form-item label="账户名" prop="account_name">
-                <el-input v-model="new_shopper.account_name"></el-input>
+                <el-input v-model="new_merchant.account_name"></el-input>
             </el-form-item>
             <el-form-item label="商户名" prop="nick_name">
-                <el-input v-model="new_shopper.nick_name"></el-input>
+                <el-input v-model="new_merchant.nick_name"></el-input>
             </el-form-item>
             <el-form-item label="邮箱" prop="email">
-                <el-input v-model="new_shopper.email"></el-input>
+                <el-input v-model="new_merchant.email"></el-input>
             </el-form-item>
             <el-form-item label="经营范围" prop="scope">
-                <el-input v-model="new_shopper.scope"></el-input>
+                <el-input v-model="new_merchant.scope"></el-input>
             </el-form-item>
             <el-form-item label="图片" prop="avatar">
                 <el-upload
@@ -51,14 +51,14 @@
         name: "index",
         computed: {
             ...mapState({
-                "new_shopper": state=>state.shopper.new_shopper,
-                "shopper_rule": state=>state.shopper.shopper_rule,
+                "new_merchant": state=>state.merchant.new_merchant,
+                "merchant_rule": state=>state.merchant.merchant_rule,
                 "image_url": state=>state.image_url,
                 "headers": state=>state.headers
             }),
             avatar_src() {
-                if (this.new_shopper.avatar) {
-                    return [{name:this.new_shopper.avatar, url:tool.transfer_img_src(this.new_shopper.avatar)}]
+                if (this.new_merchant.avatar) {
+                    return [{name:this.new_merchant.avatar, url:tool.transfer_img_src(this.new_merchant.avatar)}]
                 }
 
                 return [];
@@ -66,33 +66,33 @@
         },
         methods: {
             ...mapMutations({
-                update_new_shopper: "shopper/set_new_shopper"
+                update_new_merchant: "merchant/set_new_merchant"
             }),
             commit() {
                 const _this = this;
                 this.$refs['form'].validate(valid=>{
                     if (valid) {
-                        if (! _this.new_shopper.id) {
-                            _this.$store.dispatch('shopper/add_shopper').then((id)=>{
+                        if (! _this.new_merchant.id) {
+                            _this.$store.dispatch('merchant/add_merchant').then((id)=>{
                                 _this.$success('添加成功！');
-                                _this.$store.commit('shopper/set_new_shopper', {id: id});
-                                _this.$store.commit('shopper/add_new_shopper', _this.new_shopper);
+                                _this.$store.commit('merchant/set_new_merchant', {id: id});
+                                _this.$store.commit('merchant/add_new_merchant', _this.new_merchant);
 
-                                this.$store.commit("shopper/set_visible", {key: "add", value: false});
+                                this.$store.commit("merchant/set_visible", {key: "add", value: false});
                             }).catch(error=>{
                                 _this.$error(error);
                             });
                         }
                         else {
-                            _this.$store.dispatch('shopper/update_shopper').then(()=>{
+                            _this.$store.dispatch('merchant/update_merchant').then(()=>{
                                 _this.$success('修改成功！');
-                                _this.$store.commit('shopper/update_shopper_by_key', {
+                                _this.$store.commit('merchant/update_merchant_by_key', {
                                     key: "id",
-                                    key_val: _this.new_shopper.id,
-                                    updates: _this.new_shopper
+                                    key_val: _this.new_merchant.id,
+                                    updates: _this.new_merchant
                                 });
 
-                                this.$store.commit("shopper/set_visible", {key: "update", value: false});
+                                this.$store.commit("merchant/set_visible", {key: "update", value: false});
                             }).catch(error=>{
                                 _this.$error(error);
                             });
@@ -102,7 +102,7 @@
                 });
             },
             handleSuccess(img_src) {
-                this.update_new_shopper({avatar: img_src['avatar']});
+                this.update_new_merchant({avatar: img_src['avatar']});
             },
             handleRemove() {
 

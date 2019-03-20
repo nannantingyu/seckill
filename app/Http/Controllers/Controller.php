@@ -14,10 +14,15 @@ class Controller extends BaseController
     /**
      * 格式化+本地化返回结果
      * @param $message
+     * @param $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function jsonResponse($message) {
+    public function jsonResponse($message, $data = null) {
         $message['message'] = locale_message($message['message']) ?? $message['message'];
+        if (is_array($data)) {
+            $message = array_merge($message, $data);
+        }
+
         return response()->json($message, 200);
     }
 

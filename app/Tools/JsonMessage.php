@@ -41,7 +41,9 @@ class JsonMessage
 
     // Internal
     const INTERNAL_ERROR = ['message'=>'internal_error', 'code'=>500001];
-    const INTERNAL_FORBIDDEN = ['message'=>'internal_forbidden', 'code'=>500002];
+    const INTERNAL_FORBIDDEN = ['message'=>'internal_forbidden', 'code'=>500003];
+    const INVALID_REQUEST = ['message'=>'invalidate_request', 'code'=>500002];
+
 
     // flash sale
     const FLASH_SUCCESS = ['message'=>'flash_success', 'code'=>600000];

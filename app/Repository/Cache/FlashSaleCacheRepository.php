@@ -25,4 +25,14 @@ class FlashSaleCacheRepository extends FlashSaleRepository
             return parent::findWithInfo($id);
         });
     }
+
+    /**
+     * @param $merchantId
+     * @return FlashSaleRepository[]|\Illuminate\Database\Eloquent\Collection|mixed
+     */
+    public function getMerchantFlashSale($merchantId) {
+        return Cache::remember('merchant:flashSale:'.$merchantId, 2, function() use($merchantId) {
+            return parent::getMerchantFlashSale($merchantId);
+        });
+    }
 }

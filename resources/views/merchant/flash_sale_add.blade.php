@@ -1,13 +1,13 @@
-@extends('layouts.app_shopper')
+@extends('layouts.app_merchant')
 
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Register') }}</div>
+                <div class="card-header">{{ __('申请秒杀') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('seckill_add') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('applyFlashSale') }}" enctype="multipart/form-data">
                         @csrf
                         <input id="goods_id" type="hidden"  name="goods_id" value="{{ $goods->goods_id }}">
 

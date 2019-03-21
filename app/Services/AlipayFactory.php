@@ -25,8 +25,8 @@ class Alipay implements PayInterface
         $gateway->setAppId(config('site.alipay_app_id'));
         $gateway->setPrivateKey(config('site.alipay_app_private_key'));
         $gateway->setAlipayPublicKey(config('site.alipay_public_key'));
-        $gateway->setNotifyUrl(config('site.alipay_notify_url'));
-        $gateway->setReturnUrl(config('site.alipay_return_url'));
+        $gateway->setNotifyUrl(route('orderAliPayNotify'));
+        $gateway->setReturnUrl(route('orderList'));
         $gateway->sandbox();
 
         $response = $gateway->purchase()->setBizContent([

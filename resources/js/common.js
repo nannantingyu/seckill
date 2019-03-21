@@ -108,6 +108,10 @@ function seconds_format(second) {
         const hours = Math.floor(second / 3600);
         return hours + "时" + seconds_format(second - hours * 3600);
     }
+    else {
+        const days = Math.floor(second / (3600 * 24));
+        return days + "天" + seconds_format(second - days * 3600 * 24);
+    }
 }
 const tool = {
     fixLocaltime: function() {

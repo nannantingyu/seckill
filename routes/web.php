@@ -14,7 +14,7 @@ Route::get('/merchantRegister', 'Mall\MerchantController@pageRegister')->name('s
 Route::get('/merchantLogin', 'Mall\MerchantController@login_page');
 Route::get('/goodsKill', 'Mall\FlashSaleController@pageFlashSale')->name('goodsKill');
 Route::get('/timeDiff', 'Mall\CommonController@localtimeDiff');
-Route::post('orderAliPayNotify', "Mall\OrderController@alipayNotify");
+Route::post('orderAliPayNotify', "Mall\OrderController@alipayNotify")->name('orderAliPayNotify');
 Route::get('/killHome.html', "Mall\FlashSaleController@home");
 Route::get('/flashSaleList', 'Mall\FlashSaleController@getFlashSale')->name('flashSaleList');
 
@@ -25,7 +25,7 @@ Route::middleware('auth')->group(function() {
     Route::get('/killUrl', "Mall\FlashSaleController@flashSaleUrl");
     Route::get('/orderPay', "Mall\OrderController@orderPay");
     Route::post('/payStatus', "Mall\OrderController@payStatus");
-    Route::get('/orderList', "Mall\OrderController@pageOrderList");
+    Route::get('/orderList', "Mall\OrderController@pageOrderList")->name('orderList');
     Route::get('/orderInfo', "Mall\OrderController@pageOrderInfo")->name('orderInfo');
     Route::post('/orderCancel', "Mall\OrderController@cancelOrder")->name('orderCancel');
     Route::post('/orderDelete', "Mall\OrderController@delOrder")->name('orderDelete');

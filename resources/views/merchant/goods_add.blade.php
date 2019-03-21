@@ -1,17 +1,17 @@
-@extends('layouts.app_shopper')
+@extends('layouts.app_merchant')
 
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Register') }}</div>
+                <div class="card-header">{{ __('添加商品') }}</div>
 
                 <div class="card-body">
                     <form method="POST" enctype="multipart/form-data">
                         @csrf
 
                         <div class="form-group row">
-                            <label for="goods_name" class="col-md-4 col-form-label text-md-right">{{ __('Goods Name') }}</label>
+                            <label for="goods_name" class="col-md-4 col-form-label text-md-right">{{ __('商品名称') }}</label>
 
                             <div class="col-md-6">
                                 <input id="goods_name" type="text" class="form-control{{ $errors->has('goods_name') ? ' is-invalid' : '' }}" name="goods_name" value="{{ old('goods_name') }}" required autofocus>
@@ -25,10 +25,10 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="place" class="col-md-4 col-form-label text-md-right">{{ __('Place') }}</label>
+                            <label for="place" class="col-md-4 col-form-label text-md-right">{{ __('产地') }}</label>
 
                             <div class="col-md-6">
-                                <input id="place" type="place" class="form-control{{ $errors->has('place') ? ' is-invalid' : '' }}" name="place" value="{{ old('place') }}" required>
+                                <input id="place" type="text" class="form-control{{ $errors->has('place') ? ' is-invalid' : '' }}" name="place" value="{{ old('place') }}" required>
 
                                 @if ($errors->has('place'))
                                 <span class="invalid-feedback" role="alert">
@@ -40,10 +40,10 @@
 
 
                         <div class="form-group row">
-                            <label for="brand" class="col-md-4 col-form-label text-md-right">{{ __('Brand') }}</label>
+                            <label for="brand" class="col-md-4 col-form-label text-md-right">{{ __('品牌') }}</label>
 
                             <div class="col-md-6">
-                                <input id="brand" type="brand" class="form-control{{ $errors->has('brand') ? ' is-invalid' : '' }}" name="brand" required>
+                                <input id="brand" type="text" class="form-control{{ $errors->has('brand') ? ' is-invalid' : '' }}" name="brand" required>
 
                                 @if ($errors->has('brand'))
                                 <span class="invalid-feedback" role="alert">
@@ -54,7 +54,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="weight" class="col-md-4 col-form-label text-md-right">{{ __('Weight') }}</label>
+                            <label for="weight" class="col-md-4 col-form-label text-md-right">{{ __('重量') }}</label>
 
                             <div class="col-md-6">
                                 <input id="weight" type="number" class="form-control{{ $errors->has('weight') ? ' is-invalid' : '' }}" name="weight" required>
@@ -68,7 +68,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="packing" class="col-md-4 col-form-label text-md-right">{{ __('Packing') }}</label>
+                            <label for="packing" class="col-md-4 col-form-label text-md-right">{{ __('包装') }}</label>
 
                             <div class="col-md-6">
                                 <input id="packing" type="text" class="form-control{{ $errors->has('packing') ? ' is-invalid' : '' }}" name="packing" required>
@@ -83,7 +83,7 @@
 
 
                         <div class="form-group row">
-                            <label for="detail_pictures" class="col-md-4 col-form-label text-md-right">{{ __('Detail Pictures') }}</label>
+                            <label for="detail_pictures" class="col-md-4 col-form-label text-md-right">{{ __('详情图片') }}</label>
 
                             <div class="col-md-6">
 
@@ -100,7 +100,7 @@
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
-                                    {{ __('Add') }}
+                                    {{ __('添加') }}
                                 </button>
                             </div>
                         </div>

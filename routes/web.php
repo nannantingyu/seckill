@@ -39,8 +39,8 @@ Route::prefix('merchant')->group(function() {
 
     Route::middleware('merchant_auth')->group(function() {
         Route::post('/logout', 'Merchant\AuthController@logout')->name('merchantLogout');
-        Route::get('/flashSaleGoodsAdd', 'Merchant\FlashSaleGoodsController@pageAdd')->name('merchantGoodsAdd');
-        Route::post('/flashSaleGoodsAdd', 'Merchant\FlashSaleGoodsController@store');
+        Route::get('/goodsAdd', 'Merchant\FlashSaleGoodsController@pageAdd')->name('merchantGoodsAdd');
+        Route::post('/goodsAdd', 'Merchant\FlashSaleGoodsController@store');
         Route::get('/goodsList', 'Merchant\FlashSaleGoodsController@pageList')->name('merchantGoodsList');
         Route::post('/goodDel', 'Merchant\FlashSaleGoodsController@delete')->name('merchantGoodsDel');
         Route::get('/goodUpdate', 'Merchant\FlashSaleGoodsController@pageUpdate')->name('merchantGoodsUpdate');

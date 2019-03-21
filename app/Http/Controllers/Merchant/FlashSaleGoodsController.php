@@ -81,8 +81,8 @@ class FlashSaleGoodsController extends Controller
 
         $this->flashSaleGoodsRepository->create($data);
 
-
-        return $this->jsonResponse(JsonMessage::INSERT_SUCCESS);
+        return redirect(route('merchantGoodsList'));
+//        return $this->jsonResponse(JsonMessage::INSERT_SUCCESS);
     }
 
     /**

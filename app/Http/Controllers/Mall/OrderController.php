@@ -165,7 +165,7 @@ class OrderController extends Controller
             $pay_time = $request->input('notify_time');
             $pay_order_no = $request->input('trade_no');
 
-            $this->orderRepository->updateByColumn('order_no', $order_no, [
+            $this->orderRepository->updateByColumn($order_no, 'order_no', [
                 'pay_time'      =>  $pay_time,
                 'pay_order_no'  =>  $pay_order_no
             ]);

@@ -25,9 +25,7 @@ class OrderController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function pageOrderList() {
-        $orders = $this->orderRepository->where("user_id", Auth::id())
-            ->orderBy('updated_at', 'desc')
-            ->paginate(5);
+        $orders = $this->orderRepository->getUserOrderList();
 
         return view('mall.order_list', ['orders'=>$orders]);
     }

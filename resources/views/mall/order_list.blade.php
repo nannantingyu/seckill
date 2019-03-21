@@ -26,7 +26,7 @@
                         <td>{{$order->username}}</td>
                         <td>{{$order->phone}}</td>
                         <td>{{$order->address}}</td>
-                        <td>{{$order->pay_status==0?"为支付":($order->pay_status==1?"已支付":"已退款")}}</td>
+                        <td>{{$order->pay_status==0?"未支付":($order->pay_status==1?"已支付":"已退款")}}</td>
                         <td>{{$order->order_no}}</td>
                         <td>{{$order->pay_time}}</td>
                         <td>

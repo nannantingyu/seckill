@@ -25,4 +25,21 @@ class OrderRepository extends BaseRepository
 
         return false;
     }
+
+    /**
+     * 获取登陆用户的订单
+     * @return null
+     */
+    public function getUserOrderList() {
+        $userId = Auth::id();
+        if (is_null($userId)) {
+            return null;
+        }
+
+        return FlashSaleOrder::join('flash_sale', 'flash_sale_order.goods_id', '=', 'flash_sale.id')
+            ->select('flash_sale_order.*', 'flash_sale.title')
+            ->where('flash_sale_order.user_id', $userId)
+            ->orderBy('flash_sale.updated_at', 'desc')
+            ->get();
+    }
 }

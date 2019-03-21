@@ -14,7 +14,7 @@ Route::get('/merchantRegister', 'Mall\MerchantController@pageRegister')->name('s
 Route::get('/merchantLogin', 'Mall\MerchantController@login_page');
 Route::get('/goodsKill', 'Mall\FlashSaleController@pageFlashSale')->name('goodsKill');
 Route::get('/timeDiff', 'Mall\CommonController@localtimeDiff');
-Route::post('orderAliPayNotify', "Mall\OrderController@alipayNotify")->name('orderAliPayNotify');
+Route::post('/orderAliPayNotify', "Mall\OrderController@alipayNotify")->name('orderAliPayNotify');
 Route::get('/killHome.html', "Mall\FlashSaleController@home");
 Route::get('/flashSaleList', 'Mall\FlashSaleController@getFlashSale')->name('flashSaleList');
 

@@ -167,7 +167,9 @@ class OrderController extends Controller
 
             $this->orderRepository->updateByColumn($order_no, 'order_no', [
                 'pay_time'      =>  $pay_time,
-                'pay_order_no'  =>  $pay_order_no
+                'pay_order_no'  =>  $pay_order_no,
+                'pay_status'    =>  1,
+                'pay_type'      =>  'aliPay'
             ]);
 
             return new Response('success');

@@ -1,26 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: wangxinyao
- * Date: 2019/3/15
- * Time: 5:54 PM
- */
-
 namespace App\Tools;
 
-class ResponseMessage extends \ArrayIterator {
-    public $code;
-    public $message;
-    public function __construct($message, $code)
-    {
-        $this->message = $message;
-        $this->code = $code;
-    }
-}
-
-function aa() {
-
-}
 class JsonMessage
 {
     // Model

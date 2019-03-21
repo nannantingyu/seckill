@@ -158,7 +158,7 @@ class OrderController extends Controller
      * @throws \App\Exceptions\GeneralException
      */
     public function alipayNotify(Request $request) {
-        $status = PayFactory::getPay('alipay')->checkPayStatus($_POST);
+        $status = PayFactory::getPay('aliPay')->checkPayStatus($_POST);
 
         if ($status) {
             $order_no= $request->input('out_trade_no');

@@ -54,4 +54,18 @@ class FlashSaleController extends Controller
 
         return $flashSale;
     }
+
+    /**
+     * 获取库存
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getFlashSaleStock(Request $request) {
+        $saleId = $request->input('id');
+        if (empty($saleId)) {
+            return $this->jsonResponse(JsonMessage::INVALID_REQUEST);
+        }
+
+        return response()->json(['stock'=>$this->flashSaleRepository->getFlashSaleStock($saleId)]);
+    }
 }

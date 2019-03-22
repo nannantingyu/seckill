@@ -115,7 +115,8 @@ class FlashSaleRepository extends BaseRepository
      * @return mixed
      */
     public function getFlashSaleStock($saleId) {
-        $stockKey = 'flashSaleStock:'.$saleId;
-        return Redis::get($stockKey);
+
+        $flashSale = $this->getById($saleId);
+        return $flashSale->stock;
     }
 }

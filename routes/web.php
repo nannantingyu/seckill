@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function() {
     Route::post('/orderCancel', "Mall\OrderController@cancelOrder")->name('orderCancel');
     Route::post('/orderDelete', "Mall\OrderController@delOrder")->name('orderDelete');
     Route::get('/orderStatus', "Mall\OrderController@checkOrderStatus")->name('orderStatus');
+    ROute::get('/stock', 'Mall\FlashSaleController@getFlashSaleStock')->name('stock');
 });
 
 Route::prefix('merchant')->group(function() {

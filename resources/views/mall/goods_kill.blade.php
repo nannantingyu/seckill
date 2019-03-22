@@ -8,7 +8,7 @@
             <div class="card-body">
                 <p>{{ $flashSale->title }}</p>
                 <p>{{ $flashSale->description }}</p>
-                <p class="stock">剩余：{{ $flashSale->quantity }} / {{ $flashSale->stock }}</p>
+                <p class="stock">剩余：{{ $flashSale->quantity }} / <span id="stock">{{ $flashSale->stock }}</span></p>
                 <p><del>{{ $flashSale->ori_price }}</del> | <span class="kill-price">{{ $flashSale->kill_price }}</span></p>
                 <p>名称：{{ $goods->goods_name }}</p>
                 <p>产地：{{ $goods->place }}</p>
@@ -66,6 +66,7 @@
             tool.fixLocaltime().done(function(){
                 Array.from(times).forEach(obj=>{
                     count_line(obj);
+                    getStock();
                     setInterval(()=>{
                         count_line(obj);
                     }, 1000);
@@ -95,6 +96,28 @@
                 success: function() {
                     $('#waiting').modal('show');
                     checkOrderStatus();
+                },
+                error: function(err1, err2, err3, err4) {
+                    console.log(err1, err2, err3, err4);
+                }
+            });
+        }
+
+        function getStock() {
+            $.ajax({
+                url: '{{ route("stock") }}',
+                data: {
+                    id: document.kill_form.id.value,
+                },
+                success: function(result) {
+                    $('#stock').text(result.stock);
+                    if (result.stock > 0) {
+                        setTimeout('getStock()', 500);
+                    }
+                    else {
+                        $('#submit').attr('disabled', 'disabled');
+                        alert('秒杀已结束');
+                    }
                 },
                 error: function(err1, err2, err3, err4) {
                     console.log(err1, err2, err3, err4);

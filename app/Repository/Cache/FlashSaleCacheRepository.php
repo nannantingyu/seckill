@@ -2,6 +2,7 @@
 namespace App\Repository\Cache;
 use App\Repository\Dao\FlashSaleRepository;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 
 class FlashSaleCacheRepository extends FlashSaleRepository
 {
@@ -34,5 +35,20 @@ class FlashSaleCacheRepository extends FlashSaleRepository
         return Cache::remember('merchant:flashSale:'.$merchantId, 2, function() use($merchantId) {
             return parent::getMerchantFlashSale($merchantId);
         });
+    }
+
+    /**
+     * 获取库存
+     * @param $saleId
+     * @return mixed
+     */
+    public function getFlashSaleStock($saleId)
+    {
+        $stockKey = 'flashSaleStock:'.$saleId;
+        if (! Redis::exists($stockKey)) {
+            Redis::setnx($stockKey, parent::getFlashSaleStock($saleId));
+        }
+
+        return Redis::get($stockKey);
     }
 }

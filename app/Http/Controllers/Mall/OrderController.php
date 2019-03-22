@@ -180,7 +180,7 @@ class OrderController extends Controller
                 'pay_time'      =>  $pay_time,
                 'pay_order_no'  =>  $pay_order_no,
                 'pay_status'    =>  1,
-                'pay_type'      =>  'aliPay'
+                'pay_type'      =>  1
             ]);
 
             return new Response('success');

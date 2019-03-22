@@ -91,7 +91,7 @@ class OrderRepository extends BaseRepository
             Redis::executeRaw(['set', $orderKey, $orderNo, 'nx', 'ex', 3600]);
 
             // 减库存
-            Redis::descBy($stockKey, $num);
+            Redis::decrby($stockKey, $num);
             return true;
         }
 

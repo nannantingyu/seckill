@@ -115,7 +115,7 @@
                         setTimeout('getStock()', 500);
                     }
                     else {
-                        $('#submit').attr('disabled', 'disabled');
+                        $('#submit').prop('disabled', 'disabled');
                         alert('秒杀已结束');
                     }
                 },

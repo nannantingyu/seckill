@@ -53,7 +53,8 @@
             const begin_time = obj.getAttribute('data-begin'), end_time = obj.getAttribute('data-end');
             let time = tool.count_dead_time(begin_time, end_time);
             obj.innerHTML = (time.time < 0?"距结束：" : "距开始：") + time.timeStr;
-            if (time.time <= 0) {
+            let stock = $('#stock').text();
+            if (time.time <= 0 && parseInt(stock) > 0) {
                 $('#submit').removeAttr('disabled');
             }
 

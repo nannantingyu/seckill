@@ -9,6 +9,8 @@ use App\Repository\Dao\OrderRepository;
 use Illuminate\Http\Response;
 use App\Services\PayFactory;
 use Illuminate\Support\Facades\Auth;
+use App\Services\AmqpFactory;
+use Psy\Util\Json;
 
 class OrderController extends Controller
 {
@@ -36,7 +38,7 @@ class OrderController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function pageOrderFill(Request $request) {
-        $order_no = $request->input('no');
+        $order_no = $request->input('order_no');
         if (! ($order = $this->orderRepository->getByColumn($order_no, 'order_no'))) {
             return $this->pageResponse('404');
         }
@@ -96,33 +98,42 @@ class OrderController extends Controller
 
         $saleId = $request->input("id");
         $orderNum = (int)$request->input('num');
+
         /**
-         * 1. 检查商品余量，不足的直接返回错误
+         * 2019.03.21修改，将请求加入到队列中，另起进程处理下单
+         * 加入队列后，直接返回，让客户端等待，排队处理
          */
-        $flashSale = $this->flashSaleRepository->getById($saleId);
-        $now = date("Y-m-d H:i:s");
-        if (empty($flashSale) or $flashSale->stock <= 0 or $flashSale->end_time < $now) {
-            return $this->jsonResponse(JsonMessage::FLASH_FINISHED_ERROR);
-        }
+        $message = json_encode([
+            'userId'    =>  Auth::id(),
+            'saleId'    =>  $saleId,
+            'num'       =>  $orderNum
+        ]);
 
-        if ($order = $this->orderRepository->create([
-            "user_id"       =>  Auth::id(),
-            "order_no"      =>  uuid(),
-            "pay_status"    =>  0,
-            "goods_id"      =>  $flashSale->goods_id,
-            "order_price"   =>  $flashSale->kill_price * $orderNum,
-            "merchant_id"    =>  $flashSale->merchant_id,
-        ])) {
-            return response()->json(['order'=>[
-                'title'         => $flashSale->title,
-                'order_no'      => $order->order_no,
-                'order_price'   => $request->input('num') * $flashSale->kill_price
-            ]]);
-        }
-
-        return $this->jsonResponse(JsonMessage::FLASH_FAILED);
+        AmqpFactory::publishMessageDirect($message, AmqpFactory::DIRECT_QUEUE, AmqpFactory::DIRECT_EXCHANGE);
+        return $this->jsonResponse(JsonMessage::WAITING_HANDLING);
     }
 
+    /**
+     * 轮询检查是否秒杀到
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function checkOrderStatus(Request $request) {
+        $saleId = $request->input('id');
+        $order = $this->orderRepository->getOrderStatus($saleId);
+        if (is_null($order)) {
+            // 检查库存，如果为0，返回抢光
+            $stock = $this->flashSaleRepository->getFlashSaleStock($saleId);
+            if ($stock <= 0) {
+                return $this->jsonResponse(JsonMessage::FLASH_FINISHED_ERROR);
+            }
+
+            // 没有抢光，返回继续排队
+            return $this->jsonResponse(JsonMessage::WAITING_HANDLING);
+        }
+
+        return $this->jsonResponse(JsonMessage::FLASH_SUCCESS, ['order_no'=>$order]);
+    }
 
     /**
      * 订单支付
@@ -157,7 +168,7 @@ class OrderController extends Controller
      * @return Response
      * @throws \App\Exceptions\GeneralException
      */
-    public function alipayNotify(Request $request) {
+    public function aliPayNotify(Request $request) {
         $status = PayFactory::getPay('aliPay')->checkPayStatus($_POST);
 
         if ($status) {

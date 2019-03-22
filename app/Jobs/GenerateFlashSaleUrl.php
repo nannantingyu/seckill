@@ -8,7 +8,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Repository\Dao\FlashSaleRepository;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redis;
 
 class GenerateFlashSaleUrl implements ShouldQueue
@@ -25,7 +24,7 @@ class GenerateFlashSaleUrl implements ShouldQueue
     }
 
     /**
-     * Execute the job.
+     * 生成秒杀链接，同时将库存保存到redis中
      *
      * @return void
      */
@@ -33,7 +32,11 @@ class GenerateFlashSaleUrl implements ShouldQueue
     {
         $FlashSale_goods = app()->make(FlashSaleRepository::class)->getAlmostBeginFlashSales();
         foreach ($FlashSale_goods as $goods) {
-            Redis::executeRaw(['set', 'flash_sale_url_key:'.$goods->id, uuid(), 'ex', strtotime($goods->end_time) - time(), 'nx']);
+            $urlKey = 'flashSaleUrlKey:'.$goods->id;
+            $stockKey = 'flashSaleStock:'.$goods->id;
+
+            Redis::executeRaw(['set', $urlKey, uuid(), 'ex', strtotime($goods->end_time) - time(), 'nx']);
+            Redis::executeRaw(['set', $stockKey, $goods->stock, 'ex', strtotime($goods->end_time) - time(), 'nx']);
         }
 
         // 记录日志

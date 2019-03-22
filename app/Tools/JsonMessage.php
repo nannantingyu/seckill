@@ -29,6 +29,7 @@ class JsonMessage
     const FLASH_SUCCESS = ['message'=>'flash_success', 'code'=>600000];
     const FLASH_FINISHED_ERROR = ['message'=>'flash_finished', 'code'=>600001];
     const FLASH_FAILED = ['message'=>'flash_fail', 'code'=>600002];
+    const WAITING_HANDLING = ['message'=>'waiting', 'code'=>600003];
 
     const COMMON_SUCCESS = ['message'=>'successful', 'code'=>700001];
 }

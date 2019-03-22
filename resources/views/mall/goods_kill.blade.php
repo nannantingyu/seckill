@@ -29,6 +29,23 @@
             </div>
         </div>
     </div>
+    <!-- Large modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">抢购中</h4>
+                </div>
+                <div class="modal-body">
+                    当前抢购人数过多，正在排队中，请等待...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -71,15 +88,39 @@
             $.ajax({
                 url: url,
                 type: "post",
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
                 data: {
                     id: document.kill_form.id.value,
                     num: document.kill_form.num.value,
                 },
+                success: function() {
+                    $('#waiting').modal('show');
+                    checkOrderStatus();
+                },
+                error: function(err1, err2, err3, err4) {
+                    console.log(err1, err2, err3, err4);
+                }
+            });
+        }
+
+        function checkOrderStatus() {
+            $.ajax({
+                url: '/orderStatus',
+                data: {
+                    id: document.kill_form.id.value,
+                },
                 success: function(result) {
-                    window.location.href = "/orderFill?no=" + result.order.order_no
+                    if (result.code === 600000) {
+                        $('#waiting').modal('hide');
+                        alert('恭喜你抢到了！去支付吧');
+                        window.location.href = '/orderFill?order_no=' + result.order_no
+                    }
+                    else if (result.code === 600001) {
+                        $('#waiting').modal('hide');
+                        alert('秒杀已结束！');
+                    }
+                    else {
+                        setTimeout("checkOrderStatus()", 1000);
+                    }
                 },
                 error: function(err1, err2, err3, err4) {
                     console.log(err1, err2, err3, err4);

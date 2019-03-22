@@ -87,7 +87,7 @@ class FlashSaleRepository extends BaseRepository
      * @return string
      */
     public function getFlashSaleUrl($flashSaleId) {
-        $randKey = Redis::get('flash_sale_url_key:'.$flashSaleId);
+        $randKey = Redis::get('flashSaleUrlKey:'.$flashSaleId);
         if (is_null($randKey)) {
             return null;
         }
@@ -107,5 +107,15 @@ class FlashSaleRepository extends BaseRepository
         }
 
         return explode('/', $urlKey)[3] == $randKey;
+    }
+
+    /**
+     * 获取库存
+     * @param $saleId
+     * @return mixed
+     */
+    public function getFlashSaleStock($saleId) {
+        $stockKey = 'flashSaleStock:'.$saleId;
+        return Redis::get($stockKey);
     }
 }

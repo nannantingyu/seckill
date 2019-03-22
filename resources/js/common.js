@@ -1,4 +1,3 @@
-import 'bootstrap';
 function getValFromObjectOrDefault(obj, key, defaultVal) {
     if(obj && obj.hasOwnProperty(key)) {
         return obj[key];

@@ -12,9 +12,11 @@
     <!-- Scripts -->
     <script src="{{ asset('plugin/jquery.js') }}"></script>
     <script src="{{ mix('js/common.js') }}"></script>
+    <script src="{{ asset('plugin/bootstrap.js') }}"></script>
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{{ asset('plugin/bootstrap.css') }}">
 
     <!-- Styles -->
     <link href="{{ asset('css/page.css') }}" rel="stylesheet">

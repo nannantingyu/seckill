@@ -17,9 +17,9 @@
         "laravel/tinker": "^1.0",
         "league/omnipay": "^3",
         "lokielse/omnipay-alipay": "^3.0",
-        "nesbot/carbon": "^2.16",
+        "nesbot/carbon": "^1.32",
         "omnipay/paypal": "^3.0",
-        "php-amqplib/php-amqplib": "^2.8",
+        "php-amqplib/php-amqplib": "^2.9",
         "predis/predis": "^1.1",
         "ramsey/uuid": "^3.8",
         "silber/bouncer": "v1.0.0-rc.4",
@@ -73,5 +73,11 @@
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
         ]
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        }
     }
 }

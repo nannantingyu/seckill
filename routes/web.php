@@ -14,7 +14,7 @@ Route::get('/merchantRegister', 'Mall\MerchantController@pageRegister')->name('s
 Route::get('/merchantLogin', 'Mall\MerchantController@login_page');
 Route::get('/goodsKill', 'Mall\FlashSaleController@pageFlashSale')->name('goodsKill');
 Route::get('/timeDiff', 'Mall\CommonController@localtimeDiff');
-Route::post('/orderAliPayNotify', "Mall\OrderController@alipayNotify")->name('orderAliPayNotify');
+Route::post('/orderAliPayNotify', "Mall\OrderController@aliPayNotify")->name('orderAliPayNotify');
 Route::get('/killHome.html', "Mall\FlashSaleController@home");
 Route::get('/flashSaleList', 'Mall\FlashSaleController@getFlashSale')->name('flashSaleList');
 
@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function() {
     Route::get('/orderInfo', "Mall\OrderController@pageOrderInfo")->name('orderInfo');
     Route::post('/orderCancel', "Mall\OrderController@cancelOrder")->name('orderCancel');
     Route::post('/orderDelete', "Mall\OrderController@delOrder")->name('orderDelete');
+    Route::get('/orderStatus', "Mall\OrderController@checkOrderStatus")->name('orderStatus');
 });
 
 Route::prefix('merchant')->group(function() {

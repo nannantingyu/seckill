@@ -5,9 +5,11 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <!-- Styles -->
         <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
+        <link rel="stylesheet" href="{{ asset('plugin/bootstrap.css') }}">
         @yield('script-head')
         <script src="{{ asset('plugin/jquery.js') }}"></script>
         <script src="{{ mix('js/common.js') }}"></script>
+        <script src="{{ asset('plugin/bootstrap.js') }}"></script>
     </head>
     <body>
     <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
